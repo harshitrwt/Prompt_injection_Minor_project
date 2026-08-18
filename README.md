@@ -1,10 +1,10 @@
-# 🛡️ Prompt Injection Defense Middleware (Phase 1 Core Detector)
+# Prompt Injection Defense Middleware (Phase 1 Core Detector)
 
 > **Research Prototype & Minor Project**: A Multi-Signal Security Middleware for Detecting Prompt Injection, System Extraction, Jailbreaks, and Social Engineering in Large Language Model (LLM) Applications.
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 As Large Language Models (LLMs) are integrated into enterprise applications and autonomous agents, they become vulnerable to **Prompt Injection Attacks** (OWASP Top 10 for LLM Applications — *LLM01*). 
 
@@ -12,7 +12,7 @@ This repository implements a **Phase 1 Multi-Detector Security Middleware** that
 
 ---
 
-## 🏗️ Architecture & Data Flow
+##  Architecture & Data Flow
 
 ```
                          ┌─────────────────────────────────────────┐
@@ -51,7 +51,7 @@ This repository implements a **Phase 1 Multi-Detector Security Middleware** that
 
 ---
 
-## ✨ Key Features
+## Features
 
 1. **Multi-Signal Learned Fusion**: Combines statistical ML, pattern-matching regex rules, and dense vector embeddings so no single attack vector bypasses defense.
 2. **Auto-Decoding & De-obfuscation**: Automatically detects and unpacks Base64, Hex-encoded payloads, and zero-width Unicode homoglyphs in memory before classification.
@@ -61,7 +61,7 @@ This repository implements a **Phase 1 Multi-Detector Security Middleware** that
 
 ---
 
-## 📊 Benchmark Performance Summary (416 Real Test Samples)
+## Benchmark Performance Summary (416 Real Test Samples)
 
 Dataset split from 2,769 real samples (**1,938 Train, 415 Validation, 416 Test**):
 
@@ -74,7 +74,7 @@ Dataset split from 2,769 real samples (**1,938 Train, 415 Validation, 416 Test**
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```text
 Prompt_injection_Minor_project/
@@ -112,7 +112,7 @@ Prompt_injection_Minor_project/
 
 ---
 
-## 🚀 Quickstart: Cloning & Running Instructions
+##  Quickstart: Cloning & Running Instructions
 
 ### 1. Clone the Repository
 ```bash
@@ -138,7 +138,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🧪 Usage & Execution Commands
+##  Usage & Execution Commands
 
 ### A. Run Interactive CLI (Analyze Your Own Prompts)
 ```bash
@@ -162,7 +162,7 @@ pytest tests/
 
 ---
 
-## 🔄 Re-building / Training Models from Scratch (Optional)
+##  Re-building / Training Models from Scratch (Optional)
 
 If you want to re-download raw datasets and retrain the models:
 
@@ -179,7 +179,7 @@ python src/pipeline/security_pipeline.py
 
 ---
 
-## 📄 License & Attribution
+##  License & Attribution
 
 Developed as part of the **Prompt Injection Defense Minor Project**.  
 Built using PyTorch, Scikit-Learn, SentenceTransformers, and Kaggle MPDD dataset.
