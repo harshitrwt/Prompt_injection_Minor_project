@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# PyTest & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Large Datasets & Model Cache
+data/raw/kaggle_mpdd/
+data/raw/*.zip
+data/processed/*.csv
+!data/raw/attack_samples.csv
+!data/raw/benign_samples.csv
+
+# HuggingFace & PyTorch Cache
+.cache/
+hf_cache/
+wandb/
+
+# Results logs if temporary
+*.log
