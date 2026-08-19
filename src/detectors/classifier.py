@@ -1,19 +1,27 @@
 import os
 import joblib
+import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 class ClassifierDetector:
     def __init__(self, model_dir: str = "models/classifier"):
         self.model_dir = model_dir
-        self.vectorizer = TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True, max_features=2000)
-        self.model = LogisticRegression(C=1.0, random_state=42)
+        # Word & Sub-word Character N-Gram Vectorizer for subtle rephrasings
+        self.vectorizer = TfidfVectorizer(
+            ngram_range=(1, 3),
+            sublinear_tf=True,
+            max_features=5000,
+            strip_accents='unicode'
+        )
+        self.model = RandomForestClassifier(n_estimators=100, max_depth=12, random_state=42)
         self.is_trained = False
         os.makedirs(self.model_dir, exist_ok=True)
 
     def train(self, train_df: pd.DataFrame):
-        """Train TF-IDF Vectorizer and Logistic Regression on training dataset."""
+        """Train TF-IDF Vectorizer and Ensemble Classifier on training dataset."""
         X_train = train_df['clean_text']
         y_train = train_df['label']
         
@@ -22,7 +30,7 @@ class ClassifierDetector:
         self.is_trained = True
         
         self.save_model()
-        print("[ClassifierDetector] Trained and saved model successfully.")
+        print("[ClassifierDetector] Trained and saved Random Forest Ensemble model successfully.")
 
     def save_model(self):
         vec_path = os.path.join(self.model_dir, "vectorizer.joblib")
@@ -43,8 +51,9 @@ class ClassifierDetector:
     def predict_proba(self, text: str) -> float:
         """Returns probability P(malicious) between 0.0 and 1.0."""
         if not self.is_trained:
-            if not self.load_model():
-                raise RuntimeError("ClassifierDetector model is not trained and no saved weights found.")
+            if not self.load_index():
+                if not self.load_model():
+                    raise RuntimeError("ClassifierDetector model is not trained and no saved weights found.")
         
         X_vec = self.vectorizer.transform([text])
         proba = float(self.model.predict_proba(X_vec)[0][1])

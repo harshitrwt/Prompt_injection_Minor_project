@@ -2,34 +2,39 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 class WeightedFusionLayer:
     def __init__(self, model_dir: str = "models/fusion"):
         self.model_dir = model_dir
-        self.meta_classifier = LogisticRegression(C=1.0, random_state=42)
+        self.meta_classifier = RandomForestClassifier(n_estimators=50, max_depth=6, random_state=42)
         self.is_trained = False
-        self.learned_weights = None
-        self.learned_intercept = None
         os.makedirs(self.model_dir, exist_ok=True)
+
+    def _extract_fusion_features(self, p_ml: float, p_rule: float, p_semantic: float) -> np.ndarray:
+        """Extracts non-linear interaction features for the meta-classifier."""
+        max_sig = max(p_ml, p_rule, p_semantic)
+        min_sig = min(p_ml, p_rule, p_semantic)
+        mean_sig = (p_ml + p_rule + p_semantic) / 3.0
+        # Multi-signal synergy feature
+        synergy = 1.0 if (p_ml >= 0.50 and p_rule >= 0.50) or (p_rule >= 0.50 and p_semantic >= 0.50) or (p_ml >= 0.50 and p_semantic >= 0.50) else 0.0
+        return np.array([p_ml, p_rule, p_semantic, max_sig, min_sig, mean_sig, synergy])
 
     def train_fusion(self, feature_matrix: np.ndarray, labels: np.ndarray):
         """
-        Trains meta-classifier on vector [p_ml, p_rule, p_semantic].
+        Trains non-linear Random Forest meta-classifier on signal matrix [p_ml, p_rule, p_semantic].
         """
+        # Build non-linear interaction features for training
+        X_fusion = np.array([self._extract_fusion_features(row[0], row[1], row[2]) for row in feature_matrix])
+        
         if len(np.unique(labels)) < 2:
-            self.learned_weights = np.array([0.45, 0.35, 0.20])
-            self.learned_intercept = 0.0
             self.is_trained = True
         else:
-            self.meta_classifier.fit(feature_matrix, labels)
-            self.learned_weights = self.meta_classifier.coef_[0]
-            self.learned_intercept = float(self.meta_classifier.intercept_[0])
+            self.meta_classifier.fit(X_fusion, labels)
             self.is_trained = True
             self.save_model()
             
-        print(f"[WeightedFusionLayer] Trained meta-classifier successfully.")
-        print(f"  Learned Weights [ML, Rule, Semantic]: {self.learned_weights}")
+        print(f"[WeightedFusionLayer] Trained non-linear Stacking Meta-Classifier successfully.")
 
     def save_model(self):
         meta_path = os.path.join(self.model_dir, "meta_classifier.joblib")
@@ -39,31 +44,29 @@ class WeightedFusionLayer:
         meta_path = os.path.join(self.model_dir, "meta_classifier.joblib")
         if os.path.exists(meta_path):
             self.meta_classifier = joblib.load(meta_path)
-            self.learned_weights = self.meta_classifier.coef_[0]
-            self.learned_intercept = float(self.meta_classifier.intercept_[0])
             self.is_trained = True
             return True
         return False
 
     def predict_risk(self, p_ml: float, p_rule: float, p_semantic: float) -> dict:
         """
-        Combines three detection signals into calibrated risk_score & security decision.
+        Combines three detection signals using Stacking Meta-Classifier & Decision Boundaries.
         """
-        # Base Weighted signal fusion: ML (0.40), Rule (0.35), Semantic (0.25)
-        weights = np.array([0.40, 0.35, 0.25])
-        signals = np.array([p_ml, p_rule, p_semantic])
-        
-        raw_weighted = float(np.dot(signals, weights))
-        
-        # High Confidence Boost Logic for Genuine Attacks
-        if p_rule >= 0.70 or p_semantic >= 0.50 or p_ml >= 0.68:
-            max_sig = max(p_rule, p_semantic, p_ml * 0.90)
-            risk_score = max(raw_weighted, max_sig * 0.85)
-        elif p_rule == 0.0 and p_semantic < 0.40 and p_ml < 0.68:
-            # Suppress false positive ML noise on standard benign queries (e.g. 'summarize the following ticket')
-            risk_score = raw_weighted * 0.55
+        if self.is_trained or self.load_model():
+            feat = self._extract_fusion_features(p_ml, p_rule, p_semantic).reshape(1, -1)
+            raw_prob = float(self.meta_classifier.predict_proba(feat)[0][1])
         else:
-            risk_score = raw_weighted
+            raw_prob = (0.45 * p_ml + 0.35 * p_rule + 0.20 * p_semantic)
+
+        # Signal Escalation Rule
+        max_signal = max(p_ml, p_rule, p_semantic)
+        if p_rule >= 0.70 or p_semantic >= 0.50 or p_ml >= 0.75:
+            risk_score = max(raw_prob, max_signal * 0.85)
+        elif p_rule == 0.0 and p_semantic < 0.40 and p_ml < 0.65:
+            # Suppress false positives on benign questions
+            risk_score = min(raw_prob, 0.25)
+        else:
+            risk_score = raw_prob
             
         risk_score = max(0.0, min(1.0, risk_score))
 
@@ -91,10 +94,5 @@ class WeightedFusionLayer:
 
 if __name__ == "__main__":
     fusion = WeightedFusionLayer()
-    # Test benign summarization query
-    res_bng = fusion.predict_risk(p_ml=0.6093, p_rule=0.0, p_semantic=0.3685)
-    print(f"Benign Summarization Test: {res_bng}")
-    
-    # Test attack query
-    res_atk = fusion.predict_risk(p_ml=0.7405, p_rule=0.8500, p_semantic=0.5048)
-    print(f"Attack Injection Test: {res_atk}")
+    res = fusion.predict_risk(p_ml=0.65, p_rule=0.0, p_semantic=0.35)
+    print(f"Fusion Test Result: {res}")
