@@ -1,0 +1,5 @@
+Detector / Model,accuracy,precision,recall,f1_score,false_positive_rate,false_negative_rate,confusion_matrix
+1. ML Classifier (TF-IDF + LogReg),0.8349,0.9851,0.6633,0.7928,0.0091,0.3367,"{'TN': 217, 'FP': 2, 'FN': 67, 'TP': 132}"
+2. Heuristic Engine (Rules),0.5837,0.963,0.1307,0.2301,0.0046,0.8693,"{'TN': 218, 'FP': 1, 'FN': 173, 'TP': 26}"
+3. Semantic Embedding Sim,0.7632,0.7451,0.7638,0.7543,0.2374,0.2362,"{'TN': 167, 'FP': 52, 'FN': 47, 'TP': 152}"
+4. PROPOSED WEIGHTED FUSION,0.8038,0.7577,0.8643,0.8075,0.2511,0.1357,"{'TN': 164, 'FP': 55, 'FN': 27, 'TP': 172}"
