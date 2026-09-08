@@ -8,20 +8,20 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 os.environ["USE_TF"] = "0"
 os.environ["USE_TORCH"] = "1"
 
-# Friendly check for missing packages if user accidentally invoked 'python3' (Windows Store alias) instead of 'python'
-try:
-    import sklearn
-    import pandas
-    import sentence_transformers
-except ModuleNotFoundError as e:
+# Pre-flight environment package check
+import importlib.util
+
+missing_packages = [pkg for pkg in ["sklearn", "pandas", "sentence_transformers"] if importlib.util.find_spec(pkg) is None]
+if missing_packages:
     print("\n" + "!"*70)
-    print(" [ERROR] Missing required Python package:", e)
+    print(f" [ERROR] Missing required Python packages: {', '.join(missing_packages)}")
     print(" On Windows, please use 'python main.py' or 'py main.py' instead of 'python3'.")
     print(f" Current Executable: {sys.executable}")
     print("!"*70 + "\n")
     sys.exit(1)
 
 import argparse
+import pandas as pd
 from src.pipeline.security_pipeline import SecurityPipeline
 from src.evaluation.benchmark import run_benchmark
 
@@ -57,7 +57,12 @@ def interactive_cli(pipeline: SecurityPipeline):
             if detectors['heuristic_engine']['matches']:
                 for match in detectors['heuristic_engine']['matches']:
                     print(f"      - Matched Pattern [{match['category']}]: weight={match['weight']}")
-            print(f"   3. Semantic Similarity Score:                  {detectors['semantic_detector']['similarity']:.4f}")
+            sem_det = detectors['semantic_detector']
+            print(f"   3. Semantic Similarity Score:                  {sem_det['similarity']:.4f} (Engine: {sem_det.get('engine', 'local')}, Cosine: {sem_det.get('raw_cosine', 0):.4f})")
+            if sem_det.get('matched_threat') and sem_det['matched_threat'].get('text'):
+                matched_txt = sem_det['matched_threat']['text'][:60]
+                matched_type = sem_det['matched_threat'].get('attack_type', 'unknown')
+                print(f"      - Nearest Signature: \"{matched_txt}...\" [Type: {matched_type}]")
             print("-" * 60)
             
             # Highlight decision status

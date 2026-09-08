@@ -77,7 +77,8 @@ class SecurityPipeline:
         p_rule = heuristic_res['score']
         
         # 3. Base Signal 3: Semantic Vector Similarity Score
-        p_sem = self.semantic.predict_similarity(cleaned)
+        sem_res = self.semantic.predict_similarity_detailed(cleaned)
+        p_sem = sem_res['similarity']
         
         # 4. Learned Weighted Fusion Layer Decision
         fusion_res = self.fusion.predict_risk(p_ml, p_rule, p_sem)
@@ -97,7 +98,10 @@ class SecurityPipeline:
                 },
                 "semantic_detector": {
                     "similarity": round(p_sem, 4),
-                    "description": "SentenceTransformers Cosine Similarity"
+                    "raw_cosine": sem_res['raw_cosine'],
+                    "engine": sem_res['engine'],
+                    "matched_threat": sem_res.get('top_match'),
+                    "description": "Qdrant Cloud Vector Search with Local Fallback"
                 }
             },
             "fusion_output": fusion_res
