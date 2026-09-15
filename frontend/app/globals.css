@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ground: #ffd84d;
+  --ink: #221c4a;
+  --ink-60: rgba(34, 28, 74, 0.6);
+  --ink-30: rgba(34, 28, 74, 0.3);
+  --paper: #fffbef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---- Shared motif: rotated ink band ---- */
+.ink-band {
+  background: var(--ink);
+  color: var(--ground);
+  transform: rotate(-6.5deg);
+}
+
+.ground-band {
+  background: var(--ground);
+  color: var(--ink);
+  transform: rotate(-6.5deg);
+}
+
+/* ---- Shared motif: sticker badge ---- */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ground);
+  color: var(--ink);
+  padding: 10px 22px;
+  box-shadow: 8px 8px 0 0 var(--ink);
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.sticker-inverted {
+  background: var(--ink);
+  color: var(--ground);
+  border-color: var(--ground);
+  box-shadow: none;
+}
+
+/* ---- Type helpers ---- */
+.font-display {
+  font-family: var(--font-display), sans-serif;
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  font-family: var(--font-body), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+
+/* ---- Squiggle ---- */
+.squiggle {
+  display: inline-block;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Hard-edge card, used sparingly ---- */
+.hard-card {
+  border: 3px solid var(--ink);
+  background: var(--paper);
+}
+
+/* Scrollbar for code blocks */
+pre::-webkit-scrollbar {
+  height: 8px;
+}
+pre::-webkit-scrollbar-thumb {
+  background: var(--ink-30);
+  border-radius: 999px;
+}
