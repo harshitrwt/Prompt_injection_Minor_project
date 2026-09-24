@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
-import { Rubik_Mono_One, Space_Grotesk } from "next/font/google";
+import { Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const displayFont = Rubik_Mono_One({
+const displayFont = Newsreader({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display",
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-untitled-serif",
 });
 
-const bodyFont = Space_Grotesk({
+const monoFont = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-body",
+  weight: ["400", "500"],
+  variable: "--font-diatype-mono",
 });
 
 export const metadata: Metadata = {
-  title: "Cordon — Prompt injection defense for your chatbot",
+  title: "Cordon — Prompt Injection Defense for Browser & LLM Applications",
   description:
-    "Drop-in middleware that screens every prompt for injection, jailbreak, and extraction attempts before it reaches your LLM.",
+    "An intelligent browser extension and middleware screening every prompt for injections, jailbreaks, and extractions using multi-signal ML, heuristics, and semantic vector similarity.",
 };
 
 export default function RootLayout({
@@ -26,8 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${displayFont.variable} ${monoFont.variable} scroll-smooth`}
+    >
+      <body className="min-h-screen bg-parchment text-off-black antialiased selection:bg-off-black selection:text-parchment">
+        {children}
+      </body>
     </html>
   );
 }

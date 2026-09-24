@@ -6,19 +6,63 @@ import { Logo } from "./Logo";
 
 const links = [
   { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/logs", label: "Attack log" },
+  { href: "/dashboard/logs", label: "Attack Log" },
 ];
 
 export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-[220px] shrink-0 flex-col justify-between border-r-[3px] border-ink bg-paper px-5 py-6">
-      <div>
-        <Link href="/" className="block px-1">
+    <>
+      {/* Desktop Fixed Sidebar */}
+      <aside className="hidden h-screen w-[240px] shrink-0 flex-col justify-between border-r border-ash bg-parchment px-6 py-8 md:flex sticky top-0">
+        <div>
           <Logo />
-        </Link>
-        <nav className="mt-10 flex flex-col gap-1">
+          <nav className="mt-10 flex flex-col gap-1.5">
+            {links.map((l) => {
+              const active =
+                l.href === "/dashboard"
+                  ? pathname === "/dashboard"
+                  : pathname?.startsWith(l.href);
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`rounded-full px-4 py-2 font-mono text-[12px] uppercase tracking-wider transition ${
+                    active
+                      ? "bg-off-black text-parchment shadow-sm"
+                      : "text-graphite hover:bg-parchment/60 hover:text-off-black"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <div className="rounded-2xl border border-ash bg-white/70 p-3.5 shadow-sm">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-smoke block">
+              Tier
+            </span>
+            <span className="font-mono text-[13px] text-off-black font-medium">
+              Academic · Free
+            </span>
+          </div>
+          <Link
+            href="/"
+            className="font-mono text-[11px] uppercase tracking-wider text-smoke transition hover:text-off-black"
+          >
+            ← Return to site
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile Top Navigation Bar */}
+      <div className="flex w-full items-center justify-between border-b border-ash bg-parchment px-4 py-3 md:hidden">
+        <Logo />
+        <div className="flex items-center gap-2">
           {links.map((l) => {
             const active =
               l.href === "/dashboard"
@@ -28,33 +72,24 @@ export function DashboardSidebar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`rounded-lg px-3 py-2.5 font-body text-[14px] font-medium transition-colors ${
+                className={`rounded-full px-3 py-1 font-mono text-[11px] uppercase tracking-wider ${
                   active
-                    ? "bg-ink text-ground"
-                    : "text-ink-60 hover:bg-ink/5 hover:text-ink"
+                    ? "bg-off-black text-parchment"
+                    : "text-graphite bg-parchment/80 border border-ash"
                 }`}
               >
                 {l.label}
               </Link>
             );
           })}
-        </nav>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="hard-card px-3 py-2.5">
-          <span className="eyebrow block text-[10px] text-ink-60">Plan</span>
-          <span className="font-body text-[13px] font-semibold text-ink">
-            Demo · Free
-          </span>
+          <Link
+            href="/"
+            className="rounded-full border border-ash px-2.5 py-1 font-mono text-[10px] uppercase text-smoke"
+          >
+            Exit
+          </Link>
         </div>
-        <Link
-          href="/"
-          className="px-3 font-body text-[13px] text-ink-60 hover:text-ink"
-        >
-          ← Back to site
-        </Link>
       </div>
-    </aside>
+    </>
   );
 }

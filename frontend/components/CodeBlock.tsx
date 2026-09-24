@@ -19,42 +19,28 @@ export function CodeBlock({
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // clipboard unavailable — ignore
+      // clipboard unavailable
     }
   }
 
   return (
     <div
-      className={`hard-card overflow-hidden ${
-        inverted ? "border-ground bg-ink" : ""
+      className={`rounded-2xl border border-ash overflow-hidden ${
+        inverted ? "bg-off-black text-parchment" : "bg-parchment/70 text-off-black"
       }`}
     >
-      <div
-        className={`flex items-center justify-between border-b-[3px] px-4 py-2.5 ${
-          inverted ? "border-ground/40" : "border-ink"
-        }`}
-      >
-        <span
-          className={`eyebrow text-[11px] ${
-            inverted ? "text-ground/70" : "text-ink-60"
-          }`}
-        >
+      <div className="flex items-center justify-between border-b border-ash px-4 py-2.5">
+        <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
           {label ?? "Terminal"}
         </span>
         <button
           onClick={copy}
-          className={`font-body text-[12px] font-semibold underline-offset-4 hover:underline ${
-            inverted ? "text-ground" : "text-ink"
-          }`}
+          className="font-mono text-[11px] uppercase tracking-wider text-graphite hover:text-off-black transition"
         >
-          {copied ? "Copied" : "Copy"}
+          {copied ? "Copied ✓" : "Copy"}
         </button>
       </div>
-      <pre
-        className={`overflow-x-auto px-4 py-4 font-mono text-[13px] leading-relaxed ${
-          inverted ? "text-ground" : "text-ink"
-        }`}
-      >
+      <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed">
         <code>{code}</code>
       </pre>
     </div>

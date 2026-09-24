@@ -11,45 +11,43 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    // No backend wired up yet — this just drops the visitor into the
-    // dashboard shell so the flow can be reviewed end to end.
     setTimeout(() => router.push("/dashboard"), 350);
   }
 
   const isSignup = mode === "signup";
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 font-mono">
       {isSignup && (
         <label className="flex flex-col gap-2">
-          <span className="eyebrow text-[11px] text-ink-60">Name</span>
+          <span className="text-[11px] uppercase tracking-wider text-smoke">Name</span>
           <input
             required
             type="text"
             autoComplete="name"
-            className="border-[3px] border-ink bg-paper px-4 py-3 font-body text-[15px] text-ink outline-none focus:bg-ground/10"
-            placeholder="Jordan Lee"
+            className="rounded-xl border border-ash bg-parchment/60 px-4 py-3 text-[13px] text-off-black outline-none focus:border-off-black"
+            placeholder="Ada Lovelace"
           />
         </label>
       )}
       <label className="flex flex-col gap-2">
-        <span className="eyebrow text-[11px] text-ink-60">Work email</span>
+        <span className="text-[11px] uppercase tracking-wider text-smoke">Institutional / Work Email</span>
         <input
           required
           type="email"
           autoComplete="email"
-          className="border-[3px] border-ink bg-paper px-4 py-3 font-body text-[15px] text-ink outline-none focus:bg-ground/10"
-          placeholder="you@company.com"
+          className="rounded-xl border border-ash bg-parchment/60 px-4 py-3 text-[13px] text-off-black outline-none focus:border-off-black"
+          placeholder="researcher@lab.edu"
         />
       </label>
       <label className="flex flex-col gap-2">
-        <span className="eyebrow text-[11px] text-ink-60">Password</span>
+        <span className="text-[11px] uppercase tracking-wider text-smoke">Password</span>
         <input
           required
           type="password"
           autoComplete={isSignup ? "new-password" : "current-password"}
           minLength={8}
-          className="border-[3px] border-ink bg-paper px-4 py-3 font-body text-[15px] text-ink outline-none focus:bg-ground/10"
+          className="rounded-xl border border-ash bg-parchment/60 px-4 py-3 text-[13px] text-off-black outline-none focus:border-off-black"
           placeholder="At least 8 characters"
         />
       </label>
@@ -57,28 +55,28 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 rounded-full border-[3px] border-ink bg-ink px-6 py-3.5 font-body text-[14px] font-semibold text-ground transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+        className="btn-pill-primary mt-2 text-[13px] py-3.5"
       >
         {submitting
-          ? "One moment…"
+          ? "Authenticating…"
           : isSignup
-          ? "Create free account"
-          : "Log in"}
+          ? "Create Academic Account ▸"
+          : "Access Dashboard ▸"}
       </button>
 
-      <p className="text-center font-body text-[13px] text-ink-60">
+      <p className="text-center text-[12px] text-smoke mt-2">
         {isSignup ? (
           <>
-            Already have a key?{" "}
-            <Link href="/login" className="text-ink underline underline-offset-4">
-              Log in
+            Already registered?{" "}
+            <Link href="/login" className="text-off-black underline underline-offset-4 hover:text-lake-blue">
+              Sign in
             </Link>
           </>
         ) : (
           <>
             New to Cordon?{" "}
-            <Link href="/signup" className="text-ink underline underline-offset-4">
-              Create a free account
+            <Link href="/signup" className="text-off-black underline underline-offset-4 hover:text-lake-blue">
+              Create an account
             </Link>
           </>
         )}

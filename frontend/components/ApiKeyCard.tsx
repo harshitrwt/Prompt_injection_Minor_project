@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function randomKey() {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let out = "cd_live_";
+  let out = "st_live_";
   for (let i = 0; i < 32; i++) {
     out += chars[Math.floor(Math.random() * chars.length)];
   }
@@ -12,7 +12,7 @@ function randomKey() {
 }
 
 export function ApiKeyCard() {
-  const [key, setKey] = useState("cd_live_9f2a1b7c4e6d8091a3b5c7d9e1f2a3b4");
+  const [key, setKey] = useState("st_live_9f2a1b7c4e6d8091a3b5c7d9e1f2a3b4");
   const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -40,38 +40,38 @@ export function ApiKeyCard() {
   }
 
   return (
-    <div className="hard-card p-6">
+    <div className="rounded-2xl border border-ash bg-parchment p-6">
       <div className="flex items-center justify-between">
-        <span className="eyebrow text-[11px] text-ink-60">
-          Live API key
+        <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+          Extension &amp; API Key
         </span>
-        <span className="sticker" style={{ padding: "4px 12px", boxShadow: "none", fontSize: "11px" }}>
+        <span className="rounded-pill border border-mint/80 bg-mint/20 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase text-off-black">
           Active
         </span>
       </div>
 
-      <div className="mt-4 flex items-center gap-3 overflow-x-auto border-[3px] border-ink bg-paper px-4 py-3">
-        <code className="whitespace-nowrap font-mono text-[14px] text-ink">
+      <div className="mt-4 flex items-center gap-3 overflow-x-auto rounded-xl border border-ash bg-parchment/60 px-4 py-3">
+        <code className="whitespace-nowrap font-mono text-[13px] text-off-black">
           {revealed ? key : masked}
         </code>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <button
           onClick={() => setRevealed((v) => !v)}
-          className="rounded-full border-[3px] border-ink px-4 py-2 font-body text-[13px] font-semibold text-ink transition-transform hover:-translate-y-0.5"
+          className="rounded-pill border border-ash px-4 py-1.5 font-mono text-[12px] uppercase text-off-black transition hover:border-off-black"
         >
           {revealed ? "Hide" : "Reveal"}
         </button>
         <button
           onClick={copy}
-          className="rounded-full border-[3px] border-ink bg-ink px-4 py-2 font-body text-[13px] font-semibold text-ground transition-transform hover:-translate-y-0.5"
+          className="rounded-pill bg-off-black px-4 py-1.5 font-mono text-[12px] uppercase text-parchment transition hover:bg-black"
         >
-          {copied ? "Copied" : "Copy"}
+          {copied ? "Copied ✓" : "Copy"}
         </button>
         <button
           onClick={regenerate}
-          className="ml-auto font-body text-[13px] text-ink-60 underline underline-offset-4 hover:text-ink"
+          className="ml-auto font-mono text-[11px] uppercase text-smoke underline underline-offset-4 hover:text-off-black"
         >
           Regenerate
         </button>

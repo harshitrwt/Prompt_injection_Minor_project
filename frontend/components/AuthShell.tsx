@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { Squiggle } from "./Squiggle";
 
 export function AuthShell({
   title,
@@ -12,46 +11,64 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="relative hidden flex-col justify-between overflow-hidden bg-ink p-10 text-ground lg:flex">
-        <Link href="/">
-          <Logo inverted />
-        </Link>
-
-        <div className="relative z-10 max-w-[420px]">
-          <p className="font-display text-[clamp(1.8rem,3vw,2.6rem)] leading-[1.05]">
-            Three detectors watching every message you get.
-          </p>
-          <p className="mt-5 font-body text-[15px] leading-relaxed text-ground/70">
-            Statistical classifier, rule engine, semantic match — fused into
-            one verdict your bot can act on in milliseconds.
-          </p>
-        </div>
-
-        <div className="relative z-10 flex items-center justify-between">
-          <span className="eyebrow text-[11px] text-ground/60">
-            Phase 1 · Research prototype
-          </span>
-          <Squiggle color="var(--ground)" width={70} />
-        </div>
-
+    <div className="grid min-h-screen bg-parchment lg:grid-cols-2">
+      {/* Left Column: Warm Parchment with soft Periwinkle Mist & Pastel Accents (NOT black) */}
+      <div className="relative hidden flex-col justify-between overflow-hidden border-r border-ash bg-periwinkle-mist/30 p-12 lg:flex">
+        {/* Colorful diffused background wash */}
         <div
-          className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full border-[3px] border-ground/20"
+          className="pointer-events-none absolute -top-16 -left-16 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-coral/25 via-sky-blue/35 to-mint/30 filter blur-[70px]"
           aria-hidden="true"
         />
+        <div
+          className="pointer-events-none absolute -bottom-16 -right-16 h-[300px] w-[300px] rounded-full bg-gold/20 filter blur-[60px]"
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10">
+          <Logo />
+        </div>
+
+        <div className="relative z-10 max-w-[460px]">
+          <span className="font-mono text-[11px] uppercase tracking-widest text-smoke">
+            Browser Security Middleware
+          </span>
+          <h2 className="heading-editorial mt-3 text-[clamp(2.2rem,3.6vw,3rem)] text-off-black">
+            Three independent detectors guarding every prompt.
+          </h2>
+          <p className="mt-5 font-mono text-[14px] leading-relaxed text-graphite">
+            Statistical ML, heuristic rules, and dense vector embeddings fused into
+            a single calibrated decision in under 45ms before reaching your LLM.
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            <span className="pipeline-node-tag text-[11px]">
+              <span className="text-lake-blue">✓</span> Manifest V3 Native
+            </span>
+            <span className="pipeline-node-tag text-[11px]">
+              <span className="text-lake-blue">✓</span> In-Memory De-Obfuscator
+            </span>
+            <span className="pipeline-node-tag text-[11px]">
+              <span className="text-lake-blue">✓</span> Qdrant Cloud Vectors
+            </span>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex items-center justify-between border-t border-ash pt-6 font-mono text-[11px] text-smoke">
+          <span>Research Prototype · Phase 1</span>
+          <span>OWASP LLM01 Guardrails</span>
+        </div>
       </div>
 
-      <div className="flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-[400px]">
+      {/* Right Column: Clean Form Container */}
+      <div className="flex items-center justify-center bg-parchment px-6 py-12 sm:py-16">
+        <div className="w-full max-w-[420px]">
           <div className="mb-8 lg:hidden">
-            <Link href="/">
-              <Logo />
-            </Link>
+            <Logo />
           </div>
-          <h1 className="font-display text-[clamp(1.6rem,4vw,2.1rem)] text-ink">
+          <h1 className="heading-editorial text-[clamp(1.8rem,3vw,2.4rem)] text-off-black">
             {title}
           </h1>
-          <p className="mt-2 font-body text-[14px] text-ink-60">{subtitle}</p>
+          <p className="mt-2 font-mono text-[13px] text-smoke">{subtitle}</p>
           <div className="mt-8">{children}</div>
         </div>
       </div>
