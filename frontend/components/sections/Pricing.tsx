@@ -1,51 +1,54 @@
 import Link from "next/link";
-import { Sticker } from "../Sticker";
 
 const tiers = [
   {
-    name: "Demo",
+    name: "Academic & Community",
     price: "Free",
-    unit: "",
-    tagline: "For trying Cordon against your own bot.",
+    unit: "/ forever",
+    tagline: "For researchers, students, and individual browser users.",
     features: [
-      "500 screened prompts / month",
-      "All three detectors",
-      "7-day attack log",
-      "Community support",
+      "Full Manifest V3 Chrome extension",
+      "All 3 detection engines (ML, Heuristic, Vectors)",
+      "Local Base64 & Unicode de-obfuscation",
+      "Unlimited client-side prompt screening",
+      "Open-source Python pipeline access",
     ],
-    cta: "Get a free key",
-    href: "/signup",
-    inverted: false,
+    cta: "Add to Chrome ▸",
+    href: "https://chrome.google.com/webstore",
+    isPrimary: true,
   },
   {
-    name: "Pro",
-    price: "$29",
-    unit: "/ month",
-    tagline: "For a bot in production, watched around the clock.",
+    name: "Lab & Enterprise",
+    price: "Self-Hosted",
+    unit: "",
+    tagline: "For teams deploying private Qdrant clusters and API gateways.",
     features: [
-      "50,000 screened prompts / month",
-      "All three detectors + custom rules",
-      "90-day attack log & CSV export",
-      "Rate-limited burst protection",
-      "Email support",
+      "Private Qdrant vector cluster integration",
+      "Centralized attack telemetry dashboard",
+      "Custom organization regex and rule builder",
+      "REST API proxy for production LLM apps",
+      "Audit CSV log export & compliance reports",
     ],
-    cta: "Start Pro",
-    href: "/signup?plan=pro",
-    inverted: true,
+    cta: "View Dashboard",
+    href: "/dashboard",
+    isPrimary: false,
   },
 ];
 
 export function Pricing() {
   return (
-    <section id="pricing" className="border-t-[3px] border-ink bg-paper py-24">
-      <div className="mx-auto max-w-[1180px] px-6">
-        <div className="mb-14 max-w-[560px]">
-          <h2 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] text-ink">
-            Start free, pay when it matters
+    <section id="pricing" className="border-t border-ash py-24 sm:py-32">
+      <div className="mx-auto max-w-page px-6 sm:px-10">
+        <div className="mb-14 max-w-[620px]">
+          <span className="font-mono text-[11px] uppercase tracking-widest text-smoke">
+            Access &amp; Deployment
+          </span>
+          <h2 className="heading-editorial mt-3 text-[clamp(2rem,4vw,3.2rem)] text-off-black">
+            Open-source research. Built for everyone.
           </h2>
-          <p className="mt-4 font-body text-[16px] leading-relaxed text-ink-60">
-            Every plan gets the same three detectors. What changes is volume
-            and how long we keep your attack history around.
+          <p className="mt-4 font-mono text-[15px] leading-relaxed text-graphite">
+            The browser extension is 100% free and open-source. For academic labs
+            and engineering teams, self-hosted telemetry dashboards and API gateways are available.
           </p>
         </div>
 
@@ -53,79 +56,62 @@ export function Pricing() {
           {tiers.map((t) => (
             <div
               key={t.name}
-              className={`hard-card relative flex flex-col p-8 ${
-                t.inverted ? "border-ink bg-ink text-ground" : "text-ink"
+              className={`rounded-card border p-8 sm:p-10 flex flex-col justify-between ${
+                t.isPrimary
+                  ? "border-lake-blue/60 bg-periwinkle-mist/25"
+                  : "border-ash bg-parchment"
               }`}
             >
-              {t.inverted && (
-                <Sticker rotate={4} className="absolute -top-4 right-6">
-                  Most used
-                </Sticker>
-              )}
-              <span
-                className={`eyebrow text-[12px] ${
-                  t.inverted ? "text-ground/70" : "text-ink-60"
-                }`}
-              >
-                {t.name}
-              </span>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="font-display text-[46px]">{t.price}</span>
-                {t.unit && (
-                  <span
-                    className={`font-body text-[14px] ${
-                      t.inverted ? "text-ground/70" : "text-ink-60"
-                    }`}
-                  >
-                    {t.unit}
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-smoke">
+                    {t.name}
                   </span>
-                )}
+                  {t.isPrimary && (
+                    <span className="rounded-pill bg-lake-blue px-3 py-0.5 font-mono text-[10px] uppercase text-white">
+                      Recommended
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-4 flex items-baseline gap-2">
+                  <span className="heading-editorial text-[42px] text-off-black">
+                    {t.price}
+                  </span>
+                  {t.unit && (
+                    <span className="font-mono text-[13px] text-graphite">
+                      {t.unit}
+                    </span>
+                  )}
+                </div>
+
+                <p className="mt-3 font-mono text-[14px] leading-relaxed text-graphite">
+                  {t.tagline}
+                </p>
+
+                <ul className="mt-8 space-y-3 font-mono text-[13px] text-graphite border-t border-ash pt-6">
+                  {t.features.map((f) => (
+                    <li key={f} className="flex items-center gap-3">
+                      <span className="h-1.5 w-1.5 rounded-full bg-off-black shrink-0" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p
-                className={`mt-3 font-body text-[14px] leading-relaxed ${
-                  t.inverted ? "text-ground/70" : "text-ink-60"
-                }`}
-              >
-                {t.tagline}
-              </p>
 
-              <ul className="mt-7 flex flex-1 flex-col gap-3">
-                {t.features.map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-start gap-3 font-body text-[14px]"
-                  >
-                    <span
-                      className={`mt-[7px] h-[7px] w-[7px] shrink-0 ${
-                        t.inverted ? "bg-ground" : "bg-ink"
-                      }`}
-                    />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={t.href}
-                className={`mt-8 rounded-full border-[3px] px-6 py-3 text-center font-body text-[14px] font-semibold transition-transform hover:-translate-y-0.5 ${
-                  t.inverted
-                    ? "border-ground bg-ground text-ink"
-                    : "border-ink bg-ink text-ground"
-                }`}
-              >
-                {t.cta}
-              </Link>
+              <div className="mt-8 pt-6 border-t border-ash">
+                <Link
+                  href={t.href}
+                  className={`w-full ${
+                    t.isPrimary ? "btn-pill-primary" : "btn-pill-secondary"
+                  } text-[13px] py-3 text-center`}
+                >
+                  {t.cta}
+                </Link>
+              </div>
             </div>
           ))}
         </div>
-
-        <p className="mt-8 text-center font-body text-[13px] text-ink-60">
-          Need more than 50,000 prompts a month or a private deployment?{" "}
-          <a href="mailto:hello@cordon.dev" className="underline underline-offset-4">
-            Talk to us
-          </a>
-          .
-        </p>
       </div>
     </section>
   );

@@ -8,17 +8,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ground: "#FFD84D", // sunflower
-        ink: "#221C4A", // deep indigo
-        "ink-60": "rgba(34,28,74,0.6)",
-        "ink-30": "rgba(34,28,74,0.3)",
-        "ground-60": "rgba(255,216,77,0.6)",
-        "ground-30": "rgba(255,216,77,0.3)",
-        paper: "#FFFBEF",
+        parchment: "#f6f3f1",
+        "lake-blue": "#2b59d1",
+        "periwinkle-mist": "#cfdaf5",
+        "sky-blue": "#a0b5eb",
+        mint: "#a7fccd",
+        coral: "#ff9473",
+        gold: "#ecda98",
+        crimson: "#f37a0a",
+        "off-black": "#242424",
+        ink: "#000000",
+        graphite: "#4e4d4d",
+        smoke: "#797776",
+        ash: "#cecac8",
       },
       fontFamily: {
-        display: ["var(--font-display)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
+        serif: ["var(--font-untitled-serif)", "Georgia", "Times New Roman", "serif"],
+        mono: ["var(--font-diatype-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+      },
+      borderRadius: {
+        "2xl": "16px",
+        "3xl": "40px",
+        card: "40px",
+        button: "100px",
+        pill: "9999px",
+      },
+      maxWidth: {
+        page: "1432px",
+      },
+      boxShadow: {
+        subtle: "rgba(0, 0, 0, 0.06) 0px 4px 20px 0px",
       },
     },
   },

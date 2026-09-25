@@ -3,46 +3,55 @@ import { Logo } from "./Logo";
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-40 border-b-[3px] border-ink bg-paper/95 backdrop-blur">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4">
-        <Link href="/" aria-label="Cordon home">
-          <Logo />
-        </Link>
-        <nav className="hidden items-center gap-8 md:flex">
+    <div className="sticky top-3 z-40 w-full px-4 sm:px-6 mt-5">
+      <header className="mx-auto flex h-[58px] max-w-[1100px] items-center justify-between rounded-full border border-ash bg-parchment/95 px-5 sm:px-7 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.05)]">
+        <Logo />
+
+        {/* Minimal clean nav links - removed pipeline and clutter */}
+        <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
           <a
-            href="/#how-it-works"
-            className="eyebrow text-[12px] text-ink-60 transition-colors hover:text-ink"
+            href="#how-it-works"
+            className="font-mono text-[12px] uppercase tracking-wider text-off-black transition hover:text-lake-blue"
           >
-            How it works
+            How It Works
           </a>
           <a
-            href="/#coverage"
-            className="eyebrow text-[12px] text-ink-60 transition-colors hover:text-ink"
+            href="#coverage"
+            className="font-mono text-[12px] uppercase tracking-wider text-off-black transition hover:text-lake-blue"
           >
             Coverage
           </a>
           <a
-            href="/#pricing"
-            className="eyebrow text-[12px] text-ink-60 transition-colors hover:text-ink"
+            href="#benchmarks"
+            className="font-mono text-[12px] uppercase tracking-wider text-off-black transition hover:text-lake-blue"
           >
-            Pricing
+            Benchmarks
+          </a>
+          <a
+            href="#playground"
+            className="font-mono text-[12px] uppercase tracking-wider text-off-black transition hover:text-lake-blue"
+          >
+            Playground
           </a>
         </nav>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
             href="/login"
-            className="eyebrow hidden text-[12px] text-ink transition-opacity hover:opacity-70 sm:inline"
+            className="rounded-full bg-off-black px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment transition hover:bg-black sm:px-4 sm:py-2"
           >
-            Log in
+            Login &gt;
           </Link>
-          <Link
-            href="/signup"
-            className="rounded-full border-[3px] border-ink bg-ink px-5 py-2.5 font-body text-[13px] font-semibold text-ground transition-transform hover:-translate-y-0.5"
+          <a
+            href="https://chrome.google.com/webstore"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-lake-blue px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wider text-white transition hover:bg-[#2045a8] shadow-[0_2px_10px_rgba(43,89,209,0.3)] sm:px-4 sm:py-2"
           >
-            Get API key
-          </Link>
+            Get Extension &gt;
+          </a>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

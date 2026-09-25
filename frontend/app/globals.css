@@ -3,11 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --ground: #ffd84d;
-  --ink: #221c4a;
-  --ink-60: rgba(34, 28, 74, 0.6);
-  --ink-30: rgba(34, 28, 74, 0.3);
-  --paper: #fffbef;
+  --color-parchment: #f6f3f1;
+  --color-lake-blue: #2b59d1;
+  --color-periwinkle-mist: #cfdaf5;
+  --color-sky-blue: #a0b5eb;
+  --color-mint: #a7fccd;
+  --color-coral: #ff9473;
+  --color-gold: #ecda98;
+  --color-crimson: #f37a0a;
+  --color-off-black: #242424;
+  --color-ink: #000000;
+  --color-graphite: #4e4d4d;
+  --color-smoke: #797776;
+  --color-ash: #cecac8;
+
+  --page-max-width: 1432px;
 }
 
 * {
@@ -16,102 +26,239 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-parchment);
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body), sans-serif;
+  background-color: var(--color-parchment);
+  color: var(--color-off-black);
+  font-family: var(--font-diatype-mono), ui-monospace, monospace;
 }
 
-::selection {
-  background: var(--ink);
-  color: var(--ground);
+/* Hairline borders */
+.border-ash-hairline {
+  border: 1px solid var(--color-ash);
 }
 
-:focus-visible {
-  outline: 3px solid var(--ink);
-  outline-offset: 3px;
+/* Editorial Serif Headings: strictly weight 400, letter spacing -0.02em, line height 1.2 */
+.heading-editorial {
+  font-family: var(--font-untitled-serif), Georgia, serif;
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
 }
 
-/* ---- Shared motif: rotated ink band ---- */
-.ink-band {
-  background: var(--ink);
-  color: var(--ground);
-  transform: rotate(-6.5deg);
-}
-
-.ground-band {
-  background: var(--ground);
-  color: var(--ink);
-  transform: rotate(-6.5deg);
-}
-
-/* ---- Shared motif: sticker badge ---- */
-.sticker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  border: 3px solid var(--ink);
-  border-radius: 999px;
-  background: var(--ground);
-  color: var(--ink);
-  padding: 10px 22px;
-  box-shadow: 8px 8px 0 0 var(--ink);
-  font-family: var(--font-body), sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  white-space: nowrap;
-}
-
-.sticker-inverted {
-  background: var(--ink);
-  color: var(--ground);
-  border-color: var(--ground);
-  box-shadow: none;
-}
-
-/* ---- Type helpers ---- */
-.font-display {
-  font-family: var(--font-display), sans-serif;
-  line-height: 0.94;
+/* Technical Monospace body and UI strings */
+.text-mono-ui {
+  font-family: var(--font-diatype-mono), monospace;
   letter-spacing: -0.02em;
 }
 
-.eyebrow {
-  font-family: var(--font-body), sans-serif;
+/* Monad standard pill button styles */
+.btn-pill-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-lake-blue);
+  color: #ffffff;
+  font-family: var(--font-diatype-mono), monospace;
+  font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 12px 26px;
+  border-radius: 100px;
+  border: 1px solid var(--color-lake-blue);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-pill-primary:hover {
+  background-color: #2045a8;
+  border-color: #2045a8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(43, 89, 209, 0.25);
 }
 
-/* ---- Squiggle ---- */
-.squiggle {
-  display: inline-block;
+.btn-pill-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-off-black);
+  color: #ffffff;
+  font-family: var(--font-diatype-mono), monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  padding: 12px 26px;
+  border-radius: 100px;
+  border: 1px solid var(--color-off-black);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-pill-secondary:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(36, 36, 36, 0.2);
 }
 
-/* ---- Reduced motion ---- */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+.btn-pill-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--color-off-black);
+  font-family: var(--font-diatype-mono), monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  padding: 12px 26px;
+  border-radius: 100px;
+  border: 1px solid var(--color-ash);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-pill-ghost:hover {
+  border-color: var(--color-off-black);
+  background-color: rgba(36, 36, 36, 0.04);
+  transform: translateY(-1px);
+}
+
+/* Feature card: 40px radius, 40px padding, 1px solid Ash border */
+.card-editorial {
+  border-radius: 40px;
+  padding: 36px 40px;
+  border: 1px solid var(--color-ash);
+  background-color: var(--color-parchment);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-editorial:hover {
+  border-color: #b0aba8;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+/* Elevated hero card in Periwinkle Mist */
+.card-periwinkle {
+  border-radius: 40px;
+  padding: 40px 48px;
+  border: 1px solid #b8c8ee;
+  background-color: var(--color-periwinkle-mist);
+}
+
+/* Pill node tag for data pipeline */
+.pipeline-node-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-parchment);
+  border: 1px solid var(--color-ash);
+  border-radius: 9999px;
+  padding: 9px 18px;
+  font-family: var(--font-diatype-mono), monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--color-off-black);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Keyframe animations for live flowing data lines, rotating rings, and floating cards */
+@keyframes flow-line {
+  0% {
+    stroke-dashoffset: 60;
+  }
+  100% {
+    stroke-dashoffset: 0;
   }
 }
 
-/* ---- Hard-edge card, used sparingly ---- */
-.hard-card {
-  border: 3px solid var(--ink);
-  background: var(--paper);
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Scrollbar for code blocks */
+@keyframes spin-slow-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulse-halo {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes float-delay {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes packet-dash {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-flow {
+  stroke-dasharray: 6 6;
+  animation: flow-line 2s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 28s linear infinite;
+}
+
+.animate-spin-slow-reverse {
+  animation: spin-slow-reverse 34s linear infinite;
+}
+
+.animate-pulse-halo {
+  animation: pulse-halo 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-delay 6s ease-in-out infinite 1s;
+}
+
+/* Custom scrollbars */
 pre::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 pre::-webkit-scrollbar-thumb {
-  background: var(--ink-30);
+  background: var(--color-ash);
   border-radius: 999px;
 }

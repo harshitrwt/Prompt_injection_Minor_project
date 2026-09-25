@@ -3,46 +3,142 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="border-t-[3px] border-ink bg-paper">
-      <div className="mx-auto flex max-w-[1180px] flex-col gap-8 px-6 py-12 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <Logo />
-          <p className="mt-3 max-w-[320px] font-body text-[14px] leading-relaxed text-ink-60">
-            A screening layer that sits between your users and your LLM.
-            Three detectors, one verdict, every request.
-          </p>
-        </div>
-        <div className="flex gap-16">
-          <div className="flex flex-col gap-2.5">
-            <span className="eyebrow text-[11px] text-ink-60">Product</span>
-            <a href="/#how-it-works" className="font-body text-[14px] hover:opacity-70">
-              How it works
-            </a>
-            <a href="/#coverage" className="font-body text-[14px] hover:opacity-70">
-              Coverage
-            </a>
-            <a href="/#pricing" className="font-body text-[14px] hover:opacity-70">
-              Pricing
-            </a>
+    <footer className="border-t border-ash bg-parchment py-16">
+      <div className="mx-auto max-w-page px-6 sm:px-10">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-4">
+            <Logo />
+            <p className="font-mono text-[13px] leading-relaxed text-smoke max-w-[280px]">
+              Multi-signal prompt injection defense middleware and browser extension prototype.
+            </p>
+            <div className="font-mono text-[11px] text-smoke">
+              Research Prototype · Phase 1 Detector
+            </div>
           </div>
-          <div className="flex flex-col gap-2.5">
-            <span className="eyebrow text-[11px] text-ink-60">Account</span>
-            <Link href="/login" className="font-body text-[14px] hover:opacity-70">
-              Log in
-            </Link>
-            <Link href="/signup" className="font-body text-[14px] hover:opacity-70">
-              Create account
-            </Link>
-            <Link href="/dashboard" className="font-body text-[14px] hover:opacity-70">
-              Dashboard
-            </Link>
+
+          <div>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-smoke block mb-4">
+              Navigation
+            </span>
+            <ul className="space-y-2.5 font-mono text-[13px] text-graphite">
+              <li>
+                <a href="#pipeline" className="hover:text-off-black transition">
+                  Architecture Pipeline
+                </a>
+              </li>
+              <li>
+                <a href="#detectors" className="hover:text-off-black transition">
+                  Multi-Signal Detectors
+                </a>
+              </li>
+              <li>
+                <a href="#coverage" className="hover:text-off-black transition">
+                  Threat Coverage
+                </a>
+              </li>
+              <li>
+                <a href="#benchmarks" className="hover:text-off-black transition">
+                  Empirical Benchmarks
+                </a>
+              </li>
+              <li>
+                <a href="#playground" className="hover:text-off-black transition">
+                  Interactive Live Tester
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-smoke block mb-4">
+              Academic Literature
+            </span>
+            <ul className="space-y-2.5 font-mono text-[13px] text-graphite">
+              <li>
+                <a
+                  href="https://arxiv.org/abs/2211.09527"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  Perez &amp; Ribeiro (2022) ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.usenix.org/system/files/usenixsecurity24-liu-yupei.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  Liu et al. USENIX (2024) ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://arxiv.org/abs/2302.12173"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  Greshake et al. (2023) ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://arxiv.org/abs/2504.11358"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  DataSentinel (2025) ↗
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-smoke block mb-4">
+              Extension &amp; Project
+            </span>
+            <ul className="space-y-2.5 font-mono text-[13px] text-graphite">
+              <li>
+                <Link href="/dashboard" className="hover:text-off-black transition">
+                  Security Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard/logs" className="hover:text-off-black transition">
+                  Attack Logs Table
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/harshitrwt/Prompt_injection_Minor_project"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  GitHub Repository ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://qdrant.tech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-off-black transition"
+                >
+                  Qdrant Cloud Vectors ↗
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div className="border-t border-ink-30">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4 font-body text-[12px] text-ink-60">
-          <span>© {new Date().getFullYear()} Cordon</span>
-          <span>Phase 1 · Research prototype</span>
+
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-ash pt-8 font-mono text-[12px] text-smoke sm:flex-row">
+          <span>© 2026 Cordon Defense Project. Open-source research prototype.</span>
+          <span className="text-graphite">Designed with Monad Editorial Aesthetic</span>
         </div>
       </div>
     </footer>

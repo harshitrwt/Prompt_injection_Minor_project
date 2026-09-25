@@ -9,90 +9,103 @@ export default function DashboardOverviewPage() {
   const pct = Math.round((usage.used / usage.limit) * 100);
 
   return (
-    <div className="mx-auto max-w-[1040px] px-8 py-10">
-      <div className="mb-8 flex items-end justify-between">
+    <div className="mx-auto max-w-[1100px] px-4 py-6 sm:px-8 sm:py-10">
+      <div className="mb-6 sm:mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-[clamp(1.6rem,3vw,2.1rem)] text-ink">
-            Overview
+          <span className="font-mono text-[11px] uppercase tracking-widest text-smoke">
+            Extension &amp; Pipeline Telemetry
+          </span>
+          <h1 className="heading-editorial mt-1 text-[clamp(1.8rem,3vw,2.4rem)] text-off-black">
+            Security Overview
           </h1>
-          <p className="mt-1 font-body text-[14px] text-ink-60">
-            Everything Cordon has seen on your account this month.
+          <p className="mt-1 font-mono text-[13px] text-graphite">
+            Prompts screened across your browser extensions and API endpoints this month.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <div className="flex flex-col gap-6">
-          <div className="grid gap-6 sm:grid-cols-3">
-            <div className="hard-card p-5">
-              <span className="eyebrow text-[10px] text-ink-60">
-                Blocked
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1fr_340px]">
+        <div className="flex flex-col gap-6 min-w-0">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
+            <div className="rounded-2xl border border-ash bg-white/70 p-4 sm:p-5 shadow-sm">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+                Blocked Injections
               </span>
-              <div className="mt-1 font-display text-[30px] text-ink">
+              <div className="heading-editorial mt-2 text-[28px] sm:text-[32px] text-crimson">
                 {usage.blockedThisMonth}
               </div>
-            </div>
-            <div className="hard-card p-5">
-              <span className="eyebrow text-[10px] text-ink-60">
-                Flagged for review
+              <span className="mt-1 block font-mono text-[11px] text-smoke">
+                High-confidence threats
               </span>
-              <div className="mt-1 font-display text-[30px] text-ink">
+            </div>
+
+            <div className="rounded-2xl border border-ash bg-white/70 p-4 sm:p-5 shadow-sm">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+                Flagged for Review
+              </span>
+              <div className="heading-editorial mt-2 text-[28px] sm:text-[32px] text-off-black">
                 {usage.reviewedThisMonth}
               </div>
-            </div>
-            <div className="hard-card p-5">
-              <span className="eyebrow text-[10px] text-ink-60">
-                Usage this month
+              <span className="mt-1 block font-mono text-[11px] text-smoke">
+                Borderline risk (0.40 - 0.70)
               </span>
-              <div className="mt-1 font-display text-[30px] text-ink">
+            </div>
+
+            <div className="rounded-2xl border border-ash bg-white/70 p-4 sm:p-5 shadow-sm">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+                Monthly Audits
+              </span>
+              <div className="heading-editorial mt-2 text-[28px] sm:text-[32px] text-off-black">
                 {pct}%
               </div>
-              <div className="mt-2 h-2 w-full bg-ink/10">
+              <div className="mt-2 h-1.5 w-full rounded-pill bg-ash/40 overflow-hidden">
                 <div
-                  className="h-2 bg-ink"
+                  className="h-full bg-off-black rounded-pill"
                   style={{ width: `${Math.min(pct, 100)}%` }}
                 />
               </div>
-              <span className="mt-1 block font-body text-[11px] text-ink-60">
-                {usage.used.toLocaleString()} / {usage.limit.toLocaleString()}
+              <span className="mt-2 block font-mono text-[11px] text-smoke truncate">
+                {usage.used.toLocaleString()} / {usage.limit.toLocaleString()} prompts
               </span>
             </div>
           </div>
 
           <VolumeChart />
 
-          <div>
+          <div className="overflow-hidden">
             <div className="mb-3 flex items-center justify-between">
-              <span className="eyebrow text-[11px] text-ink-60">
-                Recent activity
+              <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+                Recent Interceptions
               </span>
               <Link
                 href="/dashboard/logs"
-                className="font-body text-[13px] font-semibold text-ink underline underline-offset-4"
+                className="font-mono text-[12px] uppercase tracking-wider text-off-black underline underline-offset-4 hover:text-lake-blue transition"
               >
-                View full log
+                View Full Log →
               </Link>
             </div>
-            <AttackTable rows={attackLog.slice(0, 5)} />
+            <div className="overflow-x-auto">
+              <AttackTable rows={attackLog.slice(0, 5)} />
+            </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-6">
           <ApiKeyCard />
           <div>
-            <span className="eyebrow mb-3 block text-[11px] text-ink-60">
-              Quickstart
+            <span className="font-mono text-[11px] uppercase tracking-wider text-smoke mb-3 block">
+              Middleware Quickstart
             </span>
             <CodeBlock
               inverted
-              label="bot.js"
-              code={`import { Cordon } from "cordon-sdk";
+              label="Python Pipeline"
+              code={`from src.pipeline.security_pipeline import SecurityPipeline
 
-const cordon = new Cordon({
-  apiKey: process.env.CORDON_API_KEY,
-});
+pipeline = SecurityPipeline()
+pipeline.load_pipeline()
 
-const verdict = await cordon.screen(message);`}
+verdict = pipeline.analyze_prompt(user_input)
+# Returns: SAFE, REVIEW, or BLOCK`}
             />
           </div>
         </div>
