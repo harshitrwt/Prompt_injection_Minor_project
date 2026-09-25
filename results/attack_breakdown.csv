@@ -1,6 +1,7 @@
 attack_type,sample_count,detection_rate_recall,accuracy
 direct,1,1.0,1.0
 extraction,4,1.0,1.0
-obfuscation,2,1.0,1.0
-real_injection,42,0.9762,0.9762
+goal_hijacking,2,1.0,1.0
+indirect,1,1.0,1.0
+real_injection,5589,0.9343,0.9343
 role_manipulation,1,1.0,1.0

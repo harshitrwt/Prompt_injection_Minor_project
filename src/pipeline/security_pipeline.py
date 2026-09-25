@@ -89,7 +89,7 @@ class SecurityPipeline:
             "detectors": {
                 "ml_classifier": {
                     "probability": round(p_ml, 4),
-                    "description": "TF-IDF + Logistic Regression"
+                    "description": "TF-IDF + Random Forest"
                 },
                 "heuristic_engine": {
                     "score": round(p_rule, 4),

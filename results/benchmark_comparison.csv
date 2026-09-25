@@ -1,5 +1,5 @@
 Detector / Model,accuracy,precision,recall,f1_score,false_positive_rate,false_negative_rate,confusion_matrix
-1. ML Classifier (TF-IDF + LogReg),0.8317,0.9847,0.6548,0.7866,0.0091,0.3452,"{'TN': 217, 'FP': 2, 'FN': 68, 'TP': 129}"
-2. Heuristic Engine (Rules),0.5865,1.0,0.1269,0.2252,0.0,0.8731,"{'TN': 219, 'FP': 0, 'FN': 172, 'TP': 25}"
-3. Semantic Embedding Sim,0.7668,0.7632,0.736,0.7494,0.2055,0.264,"{'TN': 174, 'FP': 45, 'FN': 52, 'TP': 145}"
-4. PROPOSED WEIGHTED FUSION,0.8101,0.7682,0.8579,0.8106,0.2329,0.1421,"{'TN': 168, 'FP': 51, 'FN': 28, 'TP': 169}"
+1. ML Classifier (TF-IDF + Random Forest),0.8718,0.9114,0.836,0.8721,0.0891,0.164,"{'TN': 4766, 'FP': 466, 'FN': 940, 'TP': 4793}"
+2. Heuristic Engine (Rules),0.5716,0.9022,0.2027,0.331,0.0241,0.7973,"{'TN': 5106, 'FP': 126, 'FN': 4571, 'TP': 1162}"
+3. Semantic Embedding Sim,0.5547,0.5404,0.9923,0.6997,0.9249,0.0077,"{'TN': 393, 'FP': 4839, 'FN': 44, 'TP': 5689}"
+4. PROPOSED WEIGHTED FUSION,0.8782,0.8527,0.9271,0.8884,0.1755,0.0729,"{'TN': 4314, 'FP': 918, 'FN': 418, 'TP': 5315}"

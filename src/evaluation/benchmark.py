@@ -58,7 +58,7 @@ def run_benchmark(
     metrics_fusion = compute_security_metrics(y_true, np.array(preds_fusion))
     
     summary_data = [
-        {"Detector / Model": "1. ML Classifier (TF-IDF + LogReg)", **metrics_ml},
+        {"Detector / Model": "1. ML Classifier (TF-IDF + Random Forest)", **metrics_ml},
         {"Detector / Model": "2. Heuristic Engine (Rules)", **metrics_rule},
         {"Detector / Model": "3. Semantic Embedding Sim", **metrics_sem},
         {"Detector / Model": "4. PROPOSED WEIGHTED FUSION", **metrics_fusion},

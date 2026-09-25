@@ -48,6 +48,15 @@ def test_weighted_fusion():
     assert res_low['decision'] == "SAFE"
     assert res_low['risk_score'] < 0.35
 
+def test_weighted_fusion_requires_semantic_corroboration():
+    fusion = WeightedFusionLayer()
+
+    semantic_only = fusion.predict_risk(p_ml=0.20, p_rule=0.0, p_semantic=0.95)
+    assert semantic_only['decision'] != "BLOCK"
+
+    corroborated = fusion.predict_risk(p_ml=0.80, p_rule=0.0, p_semantic=0.95)
+    assert corroborated['decision'] == "BLOCK"
+
 def test_qdrant_manager_connectivity():
     from src.detectors.qdrant_client_mgr import QdrantManager
     mgr = QdrantManager()

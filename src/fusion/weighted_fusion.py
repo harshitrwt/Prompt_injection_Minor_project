@@ -5,8 +5,19 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 class WeightedFusionLayer:
-    def __init__(self, model_dir: str = "models/fusion"):
+    def __init__(
+        self,
+        model_dir: str = "models/fusion",
+        semantic_review_threshold: float = 0.50,
+        semantic_block_threshold: float = 0.70,
+        ml_high_threshold: float = 0.75,
+        rule_high_threshold: float = 0.70,
+    ):
         self.model_dir = model_dir
+        self.semantic_review_threshold = semantic_review_threshold
+        self.semantic_block_threshold = semantic_block_threshold
+        self.ml_high_threshold = ml_high_threshold
+        self.rule_high_threshold = rule_high_threshold
         self.meta_classifier = RandomForestClassifier(n_estimators=50, max_depth=6, random_state=42)
         self.is_trained = False
         os.makedirs(self.model_dir, exist_ok=True)
@@ -58,10 +69,18 @@ class WeightedFusionLayer:
         else:
             raw_prob = (0.45 * p_ml + 0.35 * p_rule + 0.20 * p_semantic)
 
-        # Signal Escalation Rule
+        # A semantic match alone is evidence for review, not enough evidence to block.
         max_signal = max(p_ml, p_rule, p_semantic)
-        if p_rule >= 0.70 or p_semantic >= 0.50 or p_ml >= 0.75:
+        strong_ml = p_ml >= self.ml_high_threshold
+        strong_rule = p_rule >= self.rule_high_threshold
+        semantic_match = p_semantic >= self.semantic_review_threshold
+        semantic_block_match = p_semantic >= self.semantic_block_threshold
+        corroborated_semantic = semantic_block_match and (p_ml >= 0.50 or p_rule >= 0.50)
+
+        if strong_rule or strong_ml or corroborated_semantic:
             risk_score = max(raw_prob, max_signal * 0.85)
+        elif semantic_match:
+            risk_score = min(raw_prob, 0.49)
         elif p_rule == 0.0 and p_semantic < 0.40 and p_ml < 0.65:
             # Suppress false positives on benign questions
             risk_score = min(raw_prob, 0.25)
