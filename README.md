@@ -30,8 +30,8 @@ This repository implements a **Phase 1 Multi-Detector Security Middleware** that
                    │                          │                          │
                    ▼                          ▼                          ▼
       ┌─────────────────────────┐ ┌─────────────────────────┐ ┌─────────────────────────┐
-      │  1. ML Classifier Engine│ │ 2. Heuristic Rule Engine│ │3. Semantic Vector Store │
-      │  (TF-IDF + LogReg)      │ │ (Regex & Pretext Rules) │ │ (SentenceTransformers)  │
+    │  1. ML Classifier Engine│ │ 2. Heuristic Rule Engine│ │3. Semantic Vector Store │
+    │  (TF-IDF + RandomForest)│ │ (Regex & Pretext Rules) │ │ (SentenceTransformers)  │
       └────────────┬────────────┘ └────────────┬────────────┘ └────────────┬────────────┘
                    │                          │                          │
                    └──────────────────────────┼──────────────────────────┘
@@ -56,21 +56,21 @@ This repository implements a **Phase 1 Multi-Detector Security Middleware** that
 1. **Multi-Signal Learned Fusion**: Combines statistical ML, pattern-matching regex rules, and dense vector embeddings so no single attack vector bypasses defense.
 2. **Auto-Decoding & De-obfuscation**: Automatically detects and unpacks Base64, Hex-encoded payloads, and zero-width Unicode homoglyphs in memory before classification.
 3. **Social Engineering & Pretexting Defense**: Specialized heuristic rules to catch authority impersonation (`senior engineer`), pretexting (`accidentally entered wrong instructions`), and system credential harvesting.
-4. **Real Benchmark Datasets**: Integrated with **2,769 real-world benchmark prompts** from **Kaggle MPDD** (`mohammedaminejebbar/malicious-prompt-detection-dataset-mpdd`) and HuggingFace `deepset/prompt-injections`.
+4. **Multi-source Benchmark Data**: Integrated **73,094 unique prompts** from curated samples and four Hugging Face datasets: `deepset/prompt-injections`, `neuralchemy/Prompt-injection-dataset`, `rogue-security/prompt-injections-benchmark`, and `jayavibhav/prompt-injection-safety`.
 5. **Interactive & Benchmark CLI**: Command-line interface supporting single prompt inspection, interactive chat testing, and automated performance benchmarking.
 
 ---
 
-## Benchmark Performance Summary (416 Real Test Samples)
+## Benchmark Performance Summary (10,965 Test Samples)
 
-Dataset split from 2,769 real samples (**1,938 Train, 415 Validation, 416 Test**):
+The current dataset contains **73,094 unique prompts**: **51,165 train**, **10,964 validation**, and **10,965 test** samples. The test set contains **5,733 attacks** and **5,232 benign prompts**.
 
 | Detector / Model | Accuracy | Precision | Recall (Detection Rate) | F1-Score | False Positive Rate |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **1. ML Classifier (TF-IDF + LogReg)** | $91.35\%$ | $0.9708$ | $84.26\%$ | $0.9022$ | $2.28\%$ |
-| **2. Heuristic Engine (Rules)** | $58.41\%$ | $1.0000$ | $12.18\%$ | $0.2172$ | $0.00\%$ |
-| **3. Semantic Embedding Sim** | $78.12\%$ | $0.8955$ | $60.91\%$ | $0.7251$ | $6.39\%$ |
-| **4. PROPOSED WEIGHTED FUSION** | **85.10%** | **0.9412** | **73.10%** | **0.8229** | **4.11%** |
+| **1. ML Classifier (TF-IDF + Random Forest)** | $87.18\%$ | $0.9114$ | $83.60\%$ | $0.8721$ | $8.91\%$ |
+| **2. Heuristic Engine (Rules)** | $57.16\%$ | $0.9022$ | $20.27\%$ | $0.3310$ | $2.41\%$ |
+| **3. Semantic Embedding Sim** | $55.47\%$ | $0.5404$ | $99.23\%$ | $0.6997$ | $92.49\%$ |
+| **4. PROPOSED WEIGHTED FUSION** | **87.82%** | **0.8527** | **92.71%** | **0.8884** | **17.55%** |
 
 ---
 
@@ -82,7 +82,7 @@ Prompt_injection_Minor_project/
 │   ├── raw/                      # Raw datasets (attack & benign CSVs)
 │   └── processed/                # Preprocessed train/val/test CSV splits
 ├── models/
-│   ├── classifier/               # Saved TF-IDF + LogReg model weights
+│   ├── classifier/               # Saved TF-IDF + Random Forest model weights
 │   ├── embeddings/               # Saved SentenceTransformers vector index
 │   └── fusion/                   # Saved Weighted Fusion meta-classifier
 ├── results/                      # Benchmark evaluation tables & CSV exports
@@ -91,7 +91,7 @@ Prompt_injection_Minor_project/
 │   └── load_huggingface_dataset.py
 ├── src/
 │   ├── detectors/                # Core detection engines
-│   │   ├── classifier.py         # TF-IDF + Logistic Regression Detector
+│   │   ├── classifier.py         # TF-IDF + Random Forest Detector
 │   │   ├── heuristic.py          # Regex Pattern & Social Engineering Detector
 │   │   └── semantic.py           # SentenceTransformers Vector Embedding Detector
 │   ├── fusion/
