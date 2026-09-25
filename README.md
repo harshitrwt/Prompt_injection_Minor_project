@@ -167,15 +167,29 @@ pytest tests/
 If you want to re-download raw datasets and retrain the models:
 
 ```bash
-# 1. Download & Integrate Kaggle MPDD Dataset
+# 1. Download & integrate the Hugging Face dataset
+python scratch/load_huggingface_dataset.py
+
+# Optional: pass another Hugging Face dataset with text and binary label columns
+python scratch/load_huggingface_dataset.py --dataset owner/dataset-name
+
+# 2. Download & integrate Kaggle MPDD Dataset
 python scratch/load_kaggle_dataset.py
 
-# 2. Preprocess & Generate Train/Val/Test Splits
+# 3. Preprocess & Generate Train/Val/Test Splits
 python src/preprocessing/preprocess.py
 
-# 3. Train ML Classifier, Vector Store & Fusion Layer
+# 4. Train ML Classifier, Vector Store & Fusion Layer
 python src/pipeline/security_pipeline.py
 ```
+
+The Hugging Face loader expects a `text` column and a binary or named `label` column.
+It recognizes `1`, `2`, `jailbreak`, `injection`, `malicious`, `attack`, or `unsafe`
+as risky inputs and `0`, `benign`, `safe`, or `normal` as benign input. For datasets
+with a third unsafe-content class, such as `jayavibhav/prompt-injection-safety`,
+label `2` is mapped to the project's positive risky class. It reads every available
+split, removes duplicate prompts, and writes the normalized rows into
+`data/raw/attack_samples.csv` and `data/raw/benign_samples.csv`.
 
 ---
 
