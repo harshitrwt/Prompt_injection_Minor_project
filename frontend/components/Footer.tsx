@@ -9,7 +9,7 @@ export function Footer() {
           <div className="space-y-4">
             <Logo />
             <p className="font-mono text-[13px] leading-relaxed text-smoke max-w-[280px]">
-              Multi-signal prompt injection defense middleware and browser extension prototype.
+              Multi-signal prompt injection defense middleware &amp; npm package.
             </p>
             <div className="font-mono text-[11px] text-smoke">
               Research Prototype · Phase 1 Detector
@@ -99,7 +99,7 @@ export function Footer() {
 
           <div>
             <span className="font-mono text-[11px] uppercase tracking-widest text-smoke block mb-4">
-              Extension &amp; Project
+              NPM SDK &amp; Project
             </span>
             <ul className="space-y-2.5 font-mono text-[13px] text-graphite">
               <li>

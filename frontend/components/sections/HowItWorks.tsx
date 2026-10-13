@@ -244,11 +244,11 @@ export function HowItWorks() {
                     </span>
                   </div>
                   <h3 className="heading-editorial mt-2 text-[22px] text-off-black">
-                    Extension or Middleware
+                    NPM Package &amp; Middleware
                   </h3>
                   <p className="mt-2 font-mono text-[13px] leading-relaxed text-graphite">
-                    Run it wherever makes sense. Chrome extension for instant personal defense,
-                    or Python middleware with Qdrant for enterprise LLM apps.
+                    Deploy in 3 lines of code. Use the cordonguard npm package for Express &amp; Next.js,
+                    or the Python FastAPI gateway backed by Qdrant Cloud.
                   </p>
                 </div>
 
@@ -257,13 +257,13 @@ export function HowItWorks() {
                   {/* Card 1 */}
                   <div className="absolute left-2 top-2 z-10 w-32 rounded-xl border border-ash bg-white p-3 shadow-sm rotate-[-4deg] transition hover:rotate-0 hover:scale-105">
                     <div className="flex items-center justify-between">
-                      <span className="text-[12px]">☁</span>
+                      <span className="text-[12px]">📦</span>
                       <span className="h-2 w-2 rounded-full bg-mint" />
                     </div>
                     <div className="mt-2 font-mono text-[12px] font-semibold text-off-black">
-                      Extension
+                      NPM Package
                     </div>
-                    <div className="font-mono text-[9px] text-smoke">1-Click Chrome</div>
+                    <div className="font-mono text-[9px] text-smoke">Express &amp; Next.js</div>
                   </div>
 
                   {/* Card 2 */}
@@ -273,9 +273,9 @@ export function HowItWorks() {
                       <span className="h-2 w-2 rounded-full bg-lake-blue" />
                     </div>
                     <div className="mt-2 font-mono text-[12px] font-semibold text-off-black">
-                      Hybrid
+                      Cloud ANN
                     </div>
-                    <div className="font-mono text-[9px] text-smoke">Qdrant Cloud</div>
+                    <div className="font-mono text-[9px] text-smoke">Qdrant Vectors</div>
                   </div>
 
                   {/* Card 3 */}
@@ -285,9 +285,9 @@ export function HowItWorks() {
                       <span className="h-2 w-2 rounded-full bg-mint" />
                     </div>
                     <div className="mt-2 font-mono text-[12px] font-semibold text-off-black">
-                      On-Prem
+                      FastAPI
                     </div>
-                    <div className="font-mono text-[9px] text-smoke">Python SDK</div>
+                    <div className="font-mono text-[9px] text-smoke">Sub-20ms Engine</div>
                   </div>
                 </div>
               </div>

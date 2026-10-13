@@ -254,6 +254,25 @@ body {
   animation: float-delay 6s ease-in-out infinite 1s;
 }
 
+@keyframes infinite-scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(-100% - 14px));
+  }
+}
+
+.animate-infinite-scroll-up {
+  animation: infinite-scroll-up 18s linear infinite;
+  will-change: transform;
+}
+
+.animate-infinite-scroll-up:hover,
+.conveyor-container:hover .animate-infinite-scroll-up {
+  animation-play-state: paused;
+}
+
 /* Custom scrollbars */
 pre::-webkit-scrollbar {
   height: 6px;

@@ -50,7 +50,7 @@ export function Coverage() {
               Comprehensive attack vector defense.
             </h2>
             <p className="mt-4 font-mono text-[15px] leading-relaxed text-graphite">
-              Every prompt entered into your browser is evaluated across known OWASP LLM01
+              Every prompt sent to your application or chatbot is evaluated across known OWASP LLM01
               jailbreaks, extraction strategies, and covert obfuscation schemes.
             </p>
           </div>
@@ -67,31 +67,67 @@ export function Coverage() {
           </div>
         </div>
 
-        {/* Feature Cards Grid: 40px radius, 40px padding, 1px solid Ash border */}
+        {/* Feature Cards Grid: 40px radius, 40px padding, alternating Blue, Orange, Green Light Gradients */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((c) => (
-            <div
-              key={c.title}
-              className="card-editorial flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] uppercase text-smoke">
-                    Category {c.code}
-                  </span>
-                  <span className="rounded-pill border border-ash bg-parchment px-2.5 py-0.5 font-mono text-[10px] text-graphite">
-                    {c.tag}
-                  </span>
+          {categories.map((c, index) => {
+            const colorGradients = [
+              // 0: Blue Light Gradient (Category 01, Category 04)
+              {
+                cardBg: "bg-gradient-to-br from-sky-blue/20 via-periwinkle-mist/15 to-parchment/95",
+                border: "border-sky-blue/40 hover:border-lake-blue/60",
+                glow: "bg-sky-blue/25",
+                tag: "border-sky-blue/40 bg-white/80 text-lake-blue",
+                shadow: "hover:shadow-[0_12px_32px_rgba(43,89,209,0.08)]",
+              },
+              // 1: Orange Light Gradient (Category 02, Category 05)
+              {
+                cardBg: "bg-gradient-to-br from-coral/20 via-gold/15 to-parchment/95",
+                border: "border-coral/40 hover:border-crimson/60",
+                glow: "bg-coral/25",
+                tag: "border-coral/40 bg-white/80 text-crimson",
+                shadow: "hover:shadow-[0_12px_32px_rgba(243,122,10,0.08)]",
+              },
+              // 2: Green Light Gradient (Category 03, Category 06)
+              {
+                cardBg: "bg-gradient-to-br from-mint/25 via-emerald-100/20 to-parchment/95",
+                border: "border-mint/50 hover:border-emerald-500/60",
+                glow: "bg-mint/35",
+                tag: "border-mint/50 bg-white/80 text-emerald-700",
+                shadow: "hover:shadow-[0_12px_32px_rgba(16,185,129,0.08)]",
+              },
+            ];
+            const theme = colorGradients[index % 3];
+
+            return (
+              <div
+                key={c.title}
+                className={`group relative overflow-hidden rounded-[40px] p-9 sm:p-10 border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${theme.cardBg} ${theme.border} ${theme.shadow}`}
+              >
+                {/* Ambient light gradient glow matching Hero */}
+                <div
+                  className={`pointer-events-none absolute -top-14 -right-14 h-40 w-40 rounded-full ${theme.glow} filter blur-2xl opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                  aria-hidden="true"
+                />
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
+                      Category {c.code}
+                    </span>
+                    <span className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-medium transition ${theme.tag}`}>
+                      {c.tag}
+                    </span>
+                  </div>
+                  <h3 className="heading-editorial mt-4 text-[22px] text-off-black">
+                    {c.title}
+                  </h3>
+                  <p className="mt-3 font-mono text-[14px] leading-relaxed text-graphite">
+                    {c.body}
+                  </p>
                 </div>
-                <h3 className="heading-editorial mt-4 text-[22px] text-off-black">
-                  {c.title}
-                </h3>
-                <p className="mt-3 font-mono text-[14px] leading-relaxed text-graphite">
-                  {c.body}
-                </p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

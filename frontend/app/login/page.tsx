@@ -4,8 +4,8 @@ import { AuthForm } from "../../components/AuthForm";
 export default function LoginPage() {
   return (
     <AuthShell
-      title="Log back in"
-      subtitle="Your key and attack log are waiting in the dashboard."
+      title="Welcome back to Cordon"
+      subtitle="Sign in to inspect real-time detection telemetry, configure guardrails, and access your API keys."
     >
       <AuthForm mode="login" />
     </AuthShell>

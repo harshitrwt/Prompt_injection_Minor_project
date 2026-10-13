@@ -43,7 +43,7 @@ export function ApiKeyCard() {
     <div className="rounded-2xl border border-ash bg-parchment p-6">
       <div className="flex items-center justify-between">
         <span className="font-mono text-[11px] uppercase tracking-wider text-smoke">
-          Extension &amp; API Key
+          SDK &amp; Production API Key
         </span>
         <span className="rounded-pill border border-mint/80 bg-mint/20 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase text-off-black">
           Active

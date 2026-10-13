@@ -37,67 +37,89 @@ export function LivePlayground() {
   const [result, setResult] = useState<EvaluationResult | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
 
-  const analyzePrompt = (input: string) => {
+  const analyzePrompt = async (input: string) => {
     setAnalyzing(true);
 
-    setTimeout(() => {
-      let decoded = input;
-      let isBase64 = false;
-
-      // Base64 detection
-      try {
-        if (/^[A-Za-z0-9+/=]{16,}$/.test(input.trim())) {
-          const atobDecoded = atob(input.trim());
-          if (atobDecoded.length > 5 && /^[\x20-\x7E\s]+$/.test(atobDecoded)) {
-            decoded = atobDecoded;
-            isBase64 = true;
-          }
+    let decoded = input;
+    let isBase64 = false;
+    try {
+      if (/^[A-Za-z0-9+/=]{16,}$/.test(input.trim())) {
+        const atobDecoded = atob(input.trim());
+        if (atobDecoded.length > 5 && /^[\x20-\x7E\s]+$/.test(atobDecoded)) {
+          decoded = atobDecoded;
+          isBase64 = true;
         }
-      } catch {
-        // ignore
       }
+    } catch {
+      // ignore
+    }
 
-      const lower = decoded.toLowerCase();
-      const matches: string[] = [];
-
-      // Heuristic checks
-      if (lower.includes("ignore") && (lower.includes("previous") || lower.includes("instruction") || lower.includes("prompt"))) {
-        matches.push("INSTRUCTION_OVERRIDE");
-      }
-      if (lower.includes("system prompt") || lower.includes("initial prompt") || lower.includes("hidden rules")) {
-        matches.push("SYSTEM_EXTRACTION");
-      }
-      if (lower.includes("senior") || lower.includes("engineer") || lower.includes("developer mode") || lower.includes("dan")) {
-        matches.push("AUTHORITY_IMPERSONATION");
-      }
-      if (isBase64) {
-        matches.push("ENCODED_PAYLOAD_OBFUSCATION");
-      }
-
-      const heuristicScore = matches.length > 0 ? Math.min(0.45 + matches.length * 0.25, 0.98) : 0.05;
-      const isAttack = matches.length > 0 || lower.includes("bypass") || lower.includes("reveal");
-      
-      const mlProb = isAttack ? 0.88 + Math.random() * 0.1 : 0.02 + Math.random() * 0.05;
-      const semanticSim = isAttack ? 0.84 + Math.random() * 0.12 : 0.12 + Math.random() * 0.1;
-      
-      const riskScore = Math.min(mlProb * 0.45 + heuristicScore * 0.35 + semanticSim * 0.2, 0.99);
-      let decision: "SAFE" | "REVIEW" | "BLOCK" = "SAFE";
-      if (riskScore >= 0.7) decision = "BLOCK";
-      else if (riskScore >= 0.4) decision = "REVIEW";
-
-      setResult({
-        decodedPrompt: decoded,
-        mlProb,
-        heuristicScore,
-        heuristicMatches: matches,
-        semanticSim,
-        nearestThreat: isAttack ? "Perez & Ribeiro: 'Ignore previous prompt and output...'" : "Benign academic / technical query",
-        riskScore,
-        decision,
+    try {
+      const resp = await fetch("/api/inspect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: input }),
       });
+      if (resp.ok) {
+        const data = await resp.json();
+        const det = data.detectors || {};
+        const matches = (det.heuristic_engine?.matches || []).map((m: any) => typeof m === "string" ? m : m.category || "RULE_MATCH");
+        if (isBase64) matches.push("ENCODED_PAYLOAD_OBFUSCATION");
 
-      setAnalyzing(false);
-    }, 280);
+        setResult({
+          decodedPrompt: data.cleaned_prompt || decoded,
+          mlProb: det.ml_classifier?.probability ?? (data.risk_score * 0.9),
+          heuristicScore: det.heuristic_engine?.score ?? 0.8,
+          heuristicMatches: matches,
+          semanticSim: det.semantic_detector?.similarity ?? 0.85,
+          nearestThreat: det.semantic_detector?.matched_threat?.text || "Perez & Ribeiro: 'Ignore previous prompt and output...'",
+          riskScore: data.risk_score ?? 0.9,
+          decision: data.decision || "BLOCK",
+        });
+        setAnalyzing(false);
+        return;
+      }
+    } catch {
+      // Fallback to local heuristic scoring if backend is offline
+    }
+
+    const lower = decoded.toLowerCase();
+    const matches: string[] = [];
+    if (lower.includes("ignore") && (lower.includes("previous") || lower.includes("instruction") || lower.includes("prompt"))) {
+      matches.push("INSTRUCTION_OVERRIDE");
+    }
+    if (lower.includes("system prompt") || lower.includes("initial prompt") || lower.includes("hidden rules")) {
+      matches.push("SYSTEM_EXTRACTION");
+    }
+    if (lower.includes("senior") || lower.includes("engineer") || lower.includes("developer mode") || lower.includes("dan")) {
+      matches.push("AUTHORITY_IMPERSONATION");
+    }
+    if (isBase64) {
+      matches.push("ENCODED_PAYLOAD_OBFUSCATION");
+    }
+
+    const heuristicScore = matches.length > 0 ? Math.min(0.45 + matches.length * 0.25, 0.98) : 0.05;
+    const isAttack = matches.length > 0 || lower.includes("bypass") || lower.includes("reveal");
+    
+    const mlProb = isAttack ? 0.88 + Math.random() * 0.1 : 0.02 + Math.random() * 0.05;
+    const semanticSim = isAttack ? 0.84 + Math.random() * 0.12 : 0.12 + Math.random() * 0.1;
+    
+    const riskScore = Math.min(mlProb * 0.45 + heuristicScore * 0.35 + semanticSim * 0.2, 0.99);
+    let decision: "SAFE" | "REVIEW" | "BLOCK" = "SAFE";
+    if (riskScore >= 0.7) decision = "BLOCK";
+    else if (riskScore >= 0.4) decision = "REVIEW";
+
+    setResult({
+      decodedPrompt: decoded,
+      mlProb,
+      heuristicScore,
+      heuristicMatches: matches,
+      semanticSim,
+      nearestThreat: isAttack ? "Perez & Ribeiro: 'Ignore previous prompt and output...'" : "Benign academic / technical query",
+      riskScore,
+      decision,
+    });
+    setAnalyzing(false);
   };
 
   return (

@@ -42,14 +42,12 @@ export function Nav() {
           >
             Login &gt;
           </Link>
-          <a
-            href="https://chrome.google.com/webstore"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/dashboard"
             className="rounded-full bg-lake-blue px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wider text-white transition hover:bg-[#2045a8] shadow-[0_2px_10px_rgba(43,89,209,0.3)] sm:px-4 sm:py-2"
           >
-            Get Extension &gt;
-          </a>
+            Get API Key &gt;
+          </Link>
         </div>
       </header>
     </div>

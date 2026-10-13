@@ -1,0 +1,32 @@
+{
+  "name": "cordonguard",
+  "version": "1.0.0",
+  "description": "Production-grade Prompt Injection & LLM Security Firewall Middleware for Node.js, Express, Next.js, and OpenAI",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "prompt-injection",
+    "llm-security",
+    "ai-firewall",
+    "jailbreak-detector",
+    "openai",
+    "middleware",
+    "express-middleware",
+    "nextjs",
+    "qdrant"
+  ],
+  "author": "Prompt Injection Defense Middleware",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

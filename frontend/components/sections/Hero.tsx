@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoIcon } from "../LogoIcon";
 
 export function Hero() {
   return (
@@ -29,14 +30,12 @@ export function Hero() {
 
         {/* Action Pill Buttons */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-          <a
-            href="https://chrome.google.com/webstore"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/dashboard"
             className="rounded-full bg-off-black px-6 py-3 font-mono text-[13px] uppercase tracking-wider text-parchment transition hover:bg-black shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
           >
-            Start Free Trial
-          </a>
+            Get API Key &amp; SDK ▸
+          </Link>
           <a
             href="#playground"
             className="rounded-full border border-ash bg-parchment/80 px-6 py-3 font-mono text-[13px] uppercase tracking-wider text-off-black transition hover:border-off-black hover:bg-white"
@@ -52,12 +51,12 @@ export function Hero() {
             {/* Left Source Nodes */}
             <div className="z-20 flex w-full flex-row flex-wrap justify-center gap-2.5 sm:gap-3 lg:w-48 lg:flex-col lg:items-start lg:gap-3.5">
               {[
-                { label: "Any LLM App", icon: "◈" },
-                { label: "ChatGPT Web", icon: "☁" },
-                { label: "Claude Chat", icon: "⌗" },
-                { label: "Local Ollama", icon: "⌬" },
-                { label: "Web Context", icon: "⎘" },
-                { label: "Tool Prompts", icon: "⚡" },
+                { label: "Express / Node", icon: "◈" },
+                { label: "Next.js App", icon: "▲" },
+                { label: "FastAPI / Python", icon: "⌬" },
+                { label: "LangChain Agents", icon: "⌗" },
+                { label: "Support Chatbots", icon: "☁" },
+                { label: "OpenAI Proxy", icon: "⚡" },
               ].map((node) => (
                 <div
                   key={node.label}
@@ -93,24 +92,21 @@ export function Hero() {
                   AUDIT
                 </div>
 
-                {/* Rotating Dot Matrix Wheel Center */}
+                {/* Rotating Dot Matrix Wheel Center with Official Logo */}
                 <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full border border-ash/80 bg-parchment shadow-md">
                   <div className="animate-spin-slow absolute inset-1 rounded-full border border-dashed border-off-black/60" />
                   <div className="animate-spin-slow-reverse absolute inset-3 rounded-full border border-dotted border-lake-blue/60" />
                   
-                  {/* Central dot constellation */}
-                  <div className="relative flex h-8 w-8 items-center justify-center">
-                    <span className="h-2 w-2 rounded-full bg-off-black animate-ping" />
-                    <span className="absolute h-2 w-2 rounded-full bg-off-black" />
+                  {/* Central Logo Mark matching Image 1 */}
+                  <div className="relative z-10 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center">
+                    <LogoIcon className="h-9 w-9 sm:h-11 sm:w-11 text-off-black transition-transform duration-500 hover:scale-110 drop-shadow-sm" />
                   </div>
                 </div>
               </div>
-
-            
             </div>
 
             {/* Right Destination Nodes */}
-            <div className="z-20 flex w-full flex-row flex-wrap justify-center gap-2.5 sm:gap-3 lg:w-48 lg:flex-col lg:items-end lg:gap-3.5">
+            <div className="z-20 flex w-full flex-row flex-wrap justify-center gap-2.5 sm:gap-3 lg:w-48 lg:flex-col lg:items-start lg:gap-3.5">
               {[
                 { label: "Safe LLM Response", tag: "SAFE" },
                 { label: "Review Queue", tag: "FLAG" },
@@ -131,123 +127,60 @@ export function Hero() {
               ))}
             </div>
 
-            {/* SVG Connecting Flow Lines for Large screens */}
+            {/* SVG Connecting Flow Lines for Large screens - All 6 inputs & 6 outputs connected with live flowing movement */}
             <svg
               className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
               viewBox="0 0 1060 280"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M 190 30 C 350 30, 420 140, 450 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
-              <path
-                d="M 190 30 C 350 30, 420 140, 450 140"
-                stroke="#2b59d1"
-                strokeWidth="1.6"
-                strokeDasharray="4 8"
-                className="animate-flow"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 1: Express / Node (y=20) --- */}
+              <path d="M 205 20 C 330 20, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 20 C 330 20, 410 140, 448 140" stroke="#2b59d1" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 190 80 C 330 80, 420 140, 450 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
-              <path
-                d="M 190 80 C 330 80, 420 140, 450 140"
-                stroke="#f37a0a"
-                strokeWidth="1.6"
-                strokeDasharray="4 8"
-                className="animate-flow"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 2: Next.js App (y=68) --- */}
+              <path d="M 205 68 C 320 68, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 68 C 320 68, 410 140, 448 140" stroke="#f37a0a" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 190 140 L 450 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 3: FastAPI / Python (y=116) --- */}
+              <path d="M 205 116 C 300 116, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 116 C 300 116, 410 140, 448 140" stroke="#10b981" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 190 200 C 330 200, 420 140, 450 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
-              <path
-                d="M 190 200 C 330 200, 420 140, 450 140"
-                stroke="#242424"
-                strokeWidth="1.6"
-                strokeDasharray="4 8"
-                className="animate-flow"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 4: LangChain Agents (y=164) --- */}
+              <path d="M 205 164 C 300 164, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 164 C 300 164, 410 140, 448 140" stroke="#242424" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 190 250 C 350 250, 420 140, 450 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 5: Support Chatbots (y=212) --- */}
+              <path d="M 205 212 C 320 212, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 212 C 320 212, 410 140, 448 140" stroke="#4f7cf7" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              {/* Center to Right */}
-              <path
-                d="M 610 140 C 640 140, 710 30, 870 30"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
-              <path
-                d="M 610 140 C 640 140, 710 30, 870 30"
-                stroke="#a7fccd"
-                strokeWidth="2"
-                strokeDasharray="4 8"
-                className="animate-flow"
-                fill="none"
-              />
+              {/* --- LEFT SOURCE 6: OpenAI Proxy (y=260) --- */}
+              <path d="M 205 260 C 330 260, 410 140, 448 140" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 205 260 C 330 260, 410 140, 448 140" stroke="#ea580c" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 610 140 C 640 140, 730 80, 870 80"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
+              {/* --- RIGHT DESTINATION 1: Safe LLM Response (y=20) --- */}
+              <path d="M 612 140 C 650 140, 730 20, 855 20" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 730 20, 855 20" stroke="#10b981" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 610 140 L 870 140"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
-              <path
-                d="M 610 140 L 870 140"
-                stroke="#ff9473"
-                strokeWidth="1.6"
-                strokeDasharray="4 8"
-                className="animate-flow"
-                fill="none"
-              />
+              {/* --- RIGHT DESTINATION 2: Review Queue (y=68) --- */}
+              <path d="M 612 140 C 650 140, 740 68, 855 68" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 740 68, 855 68" stroke="#f37a0a" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 610 140 C 640 140, 730 200, 870 200"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
+              {/* --- RIGHT DESTINATION 3: Autonomous Block (y=116) --- */}
+              <path d="M 612 140 C 650 140, 760 116, 855 116" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 760 116, 855 116" stroke="#ef4444" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
 
-              <path
-                d="M 610 140 C 640 140, 710 250, 870 250"
-                stroke="#cecac8"
-                strokeWidth="1.2"
-                fill="none"
-              />
+              {/* --- RIGHT DESTINATION 4: Qdrant Vector DB (y=164) --- */}
+              <path d="M 612 140 C 650 140, 760 164, 855 164" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 760 164, 855 164" stroke="#2b59d1" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
+
+              {/* --- RIGHT DESTINATION 5: Audit Telemetry (y=212) --- */}
+              <path d="M 612 140 C 650 140, 740 212, 855 212" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 740 212, 855 212" stroke="#059669" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
+
+              {/* --- RIGHT DESTINATION 6: Cloud Security (y=260) --- */}
+              <path d="M 612 140 C 650 140, 730 260, 855 260" stroke="#cecac8" strokeWidth="1.2" fill="none" />
+              <path d="M 612 140 C 650 140, 730 260, 855 260" stroke="#f59e0b" strokeWidth="1.8" strokeDasharray="4 8" className="animate-flow" fill="none" />
             </svg>
           </div>
         </div>

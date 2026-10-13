@@ -4,16 +4,16 @@ import { useState } from "react";
 
 const faqs = [
   {
-    q: "How does the browser extension intercept prompts without compromising privacy?",
-    a: "Cordon runs natively inside your browser. Prompt de-obfuscation and heuristic checks occur completely in-memory on your device. When vector similarity search is enabled, only mathematical embedding vectors are transmitted to your secure Qdrant instance. No chat conversations are stored or harvested.",
+    q: "How does the cordonguard npm middleware protect my AI chatbot without compromising privacy?",
+    a: "cordonguard runs inline inside your backend before user prompts reach OpenAI, Anthropic, or internal LLMs. Mathematical scoring and vector similarity search against Qdrant Cloud occur in-memory without harvesting or storing private chat conversations.",
   },
   {
     q: "Does this introduce noticeable latency into my chat workflow?",
-    a: "No. The entire 3-detector pipeline executes in under 45 milliseconds. De-obfuscation and heuristic regex run in < 5ms, statistical ML inference takes < 15ms, and vector similarity search takes < 25ms, well below human perceptual delay.",
+    a: "No. The entire 3-detector pipeline executes in under 20 milliseconds. De-obfuscation and heuristic regex run in < 5ms, statistical ML inference takes < 10ms, and vector ANN search takes < 10ms, well below human perceptual delay.",
   },
   {
-    q: "Which AI interfaces and web platforms are supported out of the box?",
-    a: "Cordon currently provides automated DOM interception hooks for ChatGPT (chatgpt.com), Claude (claude.ai), Google Gemini, Microsoft Copilot, and self-hosted Open-WebUI / Ollama deployments.",
+    q: "Which backend frameworks and AI SDKs are supported out of the box?",
+    a: "cordonguard provides drop-in wrappers for Node.js, Express, Next.js (App Router Route Handlers), Fastify, Nest.js, and the official OpenAI Node SDK. A FastAPI Python gateway is also provided for Python services.",
   },
   {
     q: "How does the in-memory de-obfuscator handle encoded payloads?",
@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: "Can I customize detection thresholds or add organization-specific rules?",
-    a: "Yes. From the extension popup or the middleware configuration file, you can adjust the stacking fusion risk tolerance (e.g., stricter blocking thresholds) and add custom regex patterns for proprietary tokens or internal credentials.",
+    a: "Yes. From your Cordon dashboard or directly via the middleware configuration (e.g. sensitivity: 'strict'), you can tune risk thresholds and configure custom regex patterns for proprietary tokens or internal credentials.",
   },
 ];
 

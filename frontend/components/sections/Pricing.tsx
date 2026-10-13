@@ -2,34 +2,34 @@ import Link from "next/link";
 
 const tiers = [
   {
-    name: "Academic & Community",
+    name: "Developer & Community",
     price: "Free",
-    unit: "/ forever",
-    tagline: "For researchers, students, and individual browser users.",
+    unit: "/ 5k prompts",
+    tagline: "For startups, side projects, and chatbot developers.",
     features: [
-      "Full Manifest V3 Chrome extension",
+      "cordonguard npm package access",
+      "Express, Next.js & OpenAI wrappers",
       "All 3 detection engines (ML, Heuristic, Vectors)",
       "Local Base64 & Unicode de-obfuscation",
-      "Unlimited client-side prompt screening",
-      "Open-source Python pipeline access",
+      "Sub-20ms cloud inspection latency",
     ],
-    cta: "Add to Chrome ▸",
-    href: "https://chrome.google.com/webstore",
+    cta: "Get Free API Key ▸",
+    href: "/dashboard",
     isPrimary: true,
   },
   {
-    name: "Lab & Enterprise",
-    price: "Self-Hosted",
-    unit: "",
-    tagline: "For teams deploying private Qdrant clusters and API gateways.",
+    name: "Production & Enterprise",
+    price: "$49",
+    unit: "/ month",
+    tagline: "For companies protecting customer-facing bots and high-volume LLM apps.",
     features: [
-      "Private Qdrant vector cluster integration",
+      "Dedicated Qdrant vector cluster support",
+      "100,000 screened prompts / month",
       "Centralized attack telemetry dashboard",
-      "Custom organization regex and rule builder",
-      "REST API proxy for production LLM apps",
-      "Audit CSV log export & compliance reports",
+      "Custom organization regex & risk rules",
+      "Audit CSV log export & security compliance",
     ],
-    cta: "View Dashboard",
+    cta: "Launch Dashboard ▸",
     href: "/dashboard",
     isPrimary: false,
   },
@@ -44,11 +44,11 @@ export function Pricing() {
             Access &amp; Deployment
           </span>
           <h2 className="heading-editorial mt-3 text-[clamp(2rem,4vw,3.2rem)] text-off-black">
-            Open-source research. Built for everyone.
+            Open-source SDK. Production firewall.
           </h2>
           <p className="mt-4 font-mono text-[15px] leading-relaxed text-graphite">
-            The browser extension is 100% free and open-source. For academic labs
-            and engineering teams, self-hosted telemetry dashboards and API gateways are available.
+            The cordonguard npm package is free to install. For growing apps
+            and engineering teams, higher request quotas and dedicated Qdrant clusters are available.
           </p>
         </div>
 
