@@ -7,12 +7,16 @@ const displayFont = Newsreader({
   weight: ["400"],
   style: ["normal", "italic"],
   variable: "--font-untitled-serif",
+  display: "swap",
+  adjustFontFallback: false,
 });
 
 const monoFont = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-diatype-mono",
+  display: "swap",
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {

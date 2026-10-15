@@ -64,6 +64,9 @@ export async function POST(req: Request) {
       risk_level: decision === "BLOCK" ? "HIGH" : decision === "REVIEW" ? "MEDIUM" : "LOW",
       latency_ms: 8.4,
       input_prompt: prompt,
+      tier: "free",
+      quota_remaining: 4858,
+      quota_limit: 5000,
       detectors: {
         heuristic_engine: {
           score: riskScore,

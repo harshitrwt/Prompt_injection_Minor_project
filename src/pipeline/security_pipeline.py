@@ -4,6 +4,7 @@ import sys
 # Ensure root workspace directory is in python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
+# pyrefly: ignore [missing-import]
 import numpy as np
 import pandas as pd
 from src.preprocessing.preprocess import clean_text
@@ -62,7 +63,7 @@ class SecurityPipeline:
             print(f"[SecurityPipeline] Warning during load: {e}")
         return False
 
-    def analyze_prompt(self, prompt: str) -> dict:
+    def analyze_prompt(self, prompt: str, force_local: bool = False) -> dict:
         """
         Runs a text prompt through the entire prompt-injection middleware pipeline.
         Returns detailed scores from each signal and the fusion decision.
@@ -77,7 +78,8 @@ class SecurityPipeline:
         p_rule = heuristic_res['score']
         
         # 3. Base Signal 3: Semantic Vector Similarity Score
-        sem_res = self.semantic.predict_similarity_detailed(cleaned)
+        backend_override = "local" if force_local else None
+        sem_res = self.semantic.predict_similarity_detailed(cleaned, force_backend=backend_override)
         p_sem = sem_res['similarity']
         
         # 4. Learned Weighted Fusion Layer Decision

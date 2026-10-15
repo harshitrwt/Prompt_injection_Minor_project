@@ -5,7 +5,7 @@ import { MiddlewareOptions, InspectResult } from "../types";
  * Express / Connect compatible middleware that inspects inbound prompts
  * and halts malicious requests before they reach your AI endpoints.
  */
-export function cordonguard(options: MiddlewareOptions) {
+export function cordonguard(options: MiddlewareOptions = {}) {
   const guard = new CordonGuard(options);
   const promptField = options.promptField || "prompt";
 

@@ -7,7 +7,10 @@ os.environ["USE_TORCH"] = "1"
 os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
 
 import re
+from typing import Optional, List, Dict, Any
+# pyrefly: ignore [missing-import]
 import joblib
+# pyrefly: ignore [missing-import]
 import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util  # type: ignore
@@ -88,13 +91,17 @@ class SemanticDetector:
 
     def load_index(self) -> bool:
         """Loads index either via Qdrant Cloud check or local fallback."""
-        if self.qdrant and self.qdrant.is_connected:
+        # Pre-load local index so local fallback is instant with zero disk I/O latency
+        local_loaded = self.load_local_index()
+
+        if self.qdrant and self.qdrant.is_connected and not self.qdrant._circuit_open:
             count = self.qdrant.get_count()
             if count > 0:
                 self.using_qdrant = True
                 return True
-        # Fallback to local
-        return self.load_local_index()
+        
+        self.using_qdrant = False
+        return local_loaded
 
     def _extract_candidate_windows(self, text: str) -> list:
         """
@@ -109,7 +116,7 @@ class SemanticDetector:
             candidates.extend([c.strip() for c in clauses if len(c.strip()) > 8])
         return candidates
 
-    def predict_similarity_detailed(self, text: str) -> dict:
+    def predict_similarity_detailed(self, text: str, force_backend: Optional[str] = None) -> dict:
         """
         Performs semantic vector search and returns detailed diagnostics:
         - calibrated similarity score (0.0 to 1.0)
@@ -118,35 +125,46 @@ class SemanticDetector:
         - backend engine used ('qdrant_cloud' or 'local_fallback')
         """
         candidates = self._extract_candidate_windows(text)
-        candidate_embeddings = self.encoder.encode(candidates, convert_to_tensor=False, show_progress_bar=False)
+        cand_tensor = self.encoder.encode(candidates, convert_to_tensor=True, show_progress_bar=False)
 
         raw_sim = 0.0
         top_match = None
         backend = "local_fallback"
 
-        # 1. Attempt high-speed Qdrant Cloud search
-        if self.qdrant and self.qdrant.is_connected:
+        # 1. Attempt high-speed Qdrant Cloud search (unless forced local or circuit open)
+        try_qdrant = (
+            force_backend != "local"
+            and self.using_qdrant
+            and self.qdrant
+            and self.qdrant.is_connected
+            and not getattr(self.qdrant, "_circuit_open", False)
+        )
+
+        if try_qdrant:
             try:
                 best_score = 0.0
                 best_hit = None
-                for emb in candidate_embeddings:
-                    hits = self.qdrant.search_threat(query_vector=emb.tolist(), limit=1)
+                cand_np = cand_tensor.cpu().numpy()
+                for vec in cand_np:
+                    hits = self.qdrant.search_threat(query_vector=vec.tolist(), limit=1)
                     if hits and hits[0]["score"] > best_score:
                         best_score = hits[0]["score"]
                         best_hit = hits[0]
                 
-                raw_sim = float(best_score)
-                top_match = best_hit["payload"] if best_hit else None
-                backend = "qdrant_cloud"
+                if best_hit is not None or best_score > 0:
+                    raw_sim = float(best_score)
+                    top_match = best_hit["payload"] if best_hit else None
+                    backend = "qdrant_cloud"
+                else:
+                    backend = "local_fallback"
             except Exception as e:
                 print(f"[SemanticDetector] Qdrant search failed ({e}). Triggering local fallback...")
                 backend = "local_fallback"
 
-        # 2. Local fallback if Qdrant not available or search failed
+        # 2. Local fallback if Qdrant not available, disabled, or failed
         if backend == "local_fallback":
             if self.attack_embeddings is None:
                 if not self.load_local_index():
-                    # If neither exists, raise or return zero
                     return {
                         "similarity": 0.0,
                         "raw_cosine": 0.0,
@@ -154,7 +172,6 @@ class SemanticDetector:
                         "engine": "none"
                     }
             
-            cand_tensor = self.encoder.encode(candidates, convert_to_tensor=True, show_progress_bar=False)
             cosine_scores = util.cos_sim(cand_tensor, self.attack_embeddings)
             raw_sim = float(np.max(cosine_scores.cpu().numpy()))
 
@@ -170,9 +187,9 @@ class SemanticDetector:
             "engine": backend
         }
 
-    def predict_similarity(self, text: str) -> float:
+    def predict_similarity(self, text: str, force_backend: Optional[str] = None) -> float:
         """Returns calibrated similarity score (compatible with fusion pipeline)."""
-        res = self.predict_similarity_detailed(text)
+        res = self.predict_similarity_detailed(text, force_backend=force_backend)
         return res["similarity"]
 
     def add_live_threat(self, prompt: str, category: str = "zero_day", severity: str = "high") -> bool:

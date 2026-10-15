@@ -22,8 +22,6 @@ if missing_packages:
 
 import argparse
 import pandas as pd
-from src.pipeline.security_pipeline import SecurityPipeline
-from src.evaluation.benchmark import run_benchmark
 
 def print_header():
     print("=" * 68)
@@ -31,7 +29,7 @@ def print_header():
     print("      Research Prototype: Learned Weighted Signal Fusion Middleware    ")
     print("=" * 68)
 
-def interactive_cli(pipeline: SecurityPipeline):
+def interactive_cli(pipeline):
     print("\nEnter a prompt to analyze through the security middleware.")
     print("Type 'exit' or 'quit' to end session.\n")
     
@@ -84,9 +82,22 @@ def main():
     print_header()
     parser = argparse.ArgumentParser(description="Prompt Injection Defense Middleware CLI")
     parser.add_argument("--benchmark", action="store_true", help="Run benchmark evaluation on test dataset")
+    parser.add_argument("--samples", "--sample-size", type=int, default=None, dest="samples", help="Number of test samples to evaluate (e.g., 500 for fast test)")
+    parser.add_argument("--local", action="store_true", help="Force local embedding engine during benchmark (instant local evaluation)")
+    parser.add_argument("--test-qdrant", action="store_true", help="Run diagnostic health check and latency test on Qdrant Cloud connection")
     parser.add_argument("--prompt", type=str, help="Evaluate a single prompt from command line")
     
     args = parser.parse_args()
+
+    # Fast-path for Qdrant diagnostics without loading heavy ML pipeline
+    if args.test_qdrant:
+        from src.detectors.qdrant_client_mgr import QdrantManager
+        mgr = QdrantManager()
+        mgr.diagnose_connection()
+        return
+
+    from src.pipeline.security_pipeline import SecurityPipeline
+    from src.evaluation.benchmark import run_benchmark
     
     pipeline = SecurityPipeline()
     if not pipeline.load_pipeline():
@@ -98,7 +109,7 @@ def main():
         print("[System] Pre-trained models loaded successfully.")
 
     if args.benchmark:
-        run_benchmark()
+        run_benchmark(pipeline=pipeline, sample_size=args.samples, force_local=args.local)
     elif args.prompt:
         res = pipeline.analyze_prompt(args.prompt)
         print(res)

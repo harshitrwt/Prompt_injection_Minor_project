@@ -6,11 +6,17 @@ import { CordonGuardOptions, InspectResult } from "../types";
  * Automatically validates user prompts before invoking the route handler.
  */
 export function withCordonGuard(
-  options: CordonGuardOptions & {
-    extractPrompt?: (body: any) => string;
-  },
-  handler: (req: Request, context?: any) => Promise<Response>
+  optionsOrHandler:
+    | (CordonGuardOptions & { extractPrompt?: (body: any) => string })
+    | ((req: Request, context?: any) => Promise<Response>),
+  maybeHandler?: (req: Request, context?: any) => Promise<Response>
 ) {
+  const isFunction = typeof optionsOrHandler === "function";
+  const handler = (isFunction ? optionsOrHandler : maybeHandler) as (req: Request, context?: any) => Promise<Response>;
+  const options = (isFunction ? {} : optionsOrHandler) as CordonGuardOptions & {
+    extractPrompt?: (body: any) => string;
+  };
+
   const guard = new CordonGuard(options);
 
   return async function wrappedHandler(req: Request, context?: any): Promise<Response> {

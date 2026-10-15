@@ -59,3 +59,11 @@ wandb/
 
 # Results logs if temporary
 *.log
+
+# Node & SDK Dependencies
+node_modules/
+**/node_modules/
+package-lock.json
+**/package-lock.json
+.next/
+dist/
