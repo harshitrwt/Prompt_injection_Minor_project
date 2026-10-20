@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const maxDuration = 30; // Allows up to 30s for Cloud Run container warm-up
+
 export async function POST(req: Request) {
   try {
     const { prompt, sensitivity } = await req.json();
@@ -32,6 +35,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(data);
   } catch (err) {
+    console.error("[Inspect Route Error]:", err);
     return NextResponse.json(
       {
         error: "Inspection gateway is unavailable. Check GATEWAY_URL and the gateway health endpoint.",
