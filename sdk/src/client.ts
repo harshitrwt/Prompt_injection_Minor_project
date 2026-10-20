@@ -10,7 +10,7 @@ export class CordonGuard {
 
   constructor(options: CordonGuardOptions = {}) {
     this.apiKey = options.apiKey || process.env.CORDON_API_KEY;
-    this.baseUrl = (options.baseUrl || process.env.CORDON_GATEWAY_URL || "https://api.cordonguard.com").replace(/\/+$/, "");
+    this.baseUrl = (options.baseUrl || process.env.CORDON_GATEWAY_URL || "https://cordon-api-978214922885.asia-south1.run.app").replace(/\/+$/, "");
     this.timeoutMs = options.timeoutMs || 800;
     this.failOpen = options.failOpen !== undefined ? options.failOpen : true;
     this.mode = options.mode || "auto";

@@ -8,8 +8,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing or invalid prompt string" }, { status: 400 });
     }
 
-    const gatewayUrl = process.env.GATEWAY_URL || "http://127.0.0.1:8000";
-    const apiKey = process.env.CORDON_API_KEY || "test_playground";
+    const gatewayUrl = process.env.GATEWAY_URL || "https://cordon-api-978214922885.asia-south1.run.app";
+    const apiKey = process.env.CORDON_API_KEY || "AQ.Ab8RN6LClZkwqoGjpk5wc5c9b53e90e3d7460bbfd9bf8ecae4b5bf25ed10ae25ecc3de8ee2";
 
     const resp = await fetch(`${gatewayUrl}/v1/inspect`, {
       method: "POST",

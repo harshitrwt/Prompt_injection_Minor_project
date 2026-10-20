@@ -45,15 +45,13 @@ instead of fabricating a result.
   sticker badge (`components/Sticker.tsx`), hand-drawn squiggle
   (`components/Squiggle.tsx`)
 
-## Deploying
+## Deploying on Vercel
 
-Built to deploy on Vercel as-is: `vercel deploy`, or connect the repo in the
-Vercel dashboard. No environment variables are required yet — add
-`CORDON_API_KEY` and friends once the backend exists.
+1. Import this repository into [Vercel](https://vercel.com/new).
+2. Set the **Root Directory** to `frontend`.
+3. Under **Environment Variables**, add:
+   * `GATEWAY_URL` = `https://cordon-api-978214922885.asia-south1.run.app`
+   * `CORDON_API_KEY` = `AQ.Ab8RN6LClZkwqoGjpk5wc5c9b53e90e3d7460bbfd9bf8ecae4b5bf25ed10ae25ecc3de8ee2`
+4. Click **Deploy**.
 
-## Package name used in copy
-
-The install snippet in the "how it works" section and the dashboard
-quickstart both reference `cordon-sdk` as the npm package name — update this
-in `components/sections/HowItWorks.tsx` and `app/dashboard/page.tsx` once
-you've settled on a real package name.
+The Next.js proxy route at `/api/inspect` will automatically communicate with the Google Cloud Run gateway.

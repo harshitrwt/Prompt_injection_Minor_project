@@ -10,6 +10,7 @@ import os
 import sys
 import datetime
 import requests
+# pyrefly: ignore[missing-import]
 from dotenv import load_dotenv
 
 # Ensure environment variables are loaded
