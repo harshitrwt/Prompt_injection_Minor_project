@@ -1,0 +1,15 @@
+.git/
+.github/
+frontend/
+Prompt_injection_Minor_project/
+data/
+results/
+scratch/
+tests/
+venv/
+.venv/
+.cache/
+__pycache__/
+.pytest_cache/
+.env
+.env.*

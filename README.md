@@ -193,6 +193,10 @@ split, removes duplicate prompts, and writes the normalized rows into
 
 ---
 
+## Deploy the API to Google Cloud
+
+To serve prompt inspections remotely with Cloud Run, follow [DEPLOY_GOOGLE_CLOUD.md](DEPLOY_GOOGLE_CLOUD.md). The deployment includes the saved detector models and embedding model, so the local machine only needs to run the frontend and point `GATEWAY_URL` at the Cloud Run service.
+
 ##  License & Attribution
 
 Developed as part of the **Prompt Injection Defense Minor Project**.  

@@ -3,10 +3,10 @@
 Landing page + customer dashboard for Cordon, the prompt-injection screening
 API. Built with Next.js 14 (App Router), TypeScript, and Tailwind CSS.
 
-This is **frontend only** — no backend, auth, or database is wired up.
-Forms and buttons that would normally hit an API (login, signup, API key
-regenerate, CSV export) are mocked so you can review the full flow; swap in
-real calls when the backend is ready.
+This frontend includes a live playground proxy at `/api/inspect`. The proxy
+forwards prompt inspections to the Python FastAPI gateway; it does not generate
+fallback or random detector results. Login, signup, API key regeneration, CSV
+export, and dashboard telemetry remain mocked.
 
 ## Pages
 
@@ -19,11 +19,20 @@ real calls when the backend is ready.
 ## Run it
 
 ```bash
+# From the repository root, start the Python model gateway in another terminal:
+python -m src.api.server
+
+# In this directory, start the frontend:
 npm install
 npm run dev
 ```
 
 Open http://localhost:3000.
+
+The playground calls `http://127.0.0.1:8000/v1/inspect` by default. Set
+`GATEWAY_URL` and `CORDON_API_KEY` in `frontend/.env.local` to use another
+gateway. If the Python gateway is not running, the playground shows an error
+instead of fabricating a result.
 
 ## Design system
 
