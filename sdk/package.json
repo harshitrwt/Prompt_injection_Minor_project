@@ -1,6 +1,6 @@
 {
   "name": "cordonguard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-grade Prompt Injection & LLM Security Firewall Middleware for Node.js, Express, Next.js, and OpenAI",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,8 +24,16 @@
     "nextjs",
     "qdrant"
   ],
-  "author": "Prompt Injection Defense Middleware",
+  "author": "Harshit Rawat (@harshitrwt)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshitrwt/Prompt_injection_Minor_project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/harshitrwt/Prompt_injection_Minor_project/issues"
+  },
+  "homepage": "https://github.com/harshitrwt/Prompt_injection_Minor_project#readme",
   "devDependencies": {
     "typescript": "^5.0.0"
   }
