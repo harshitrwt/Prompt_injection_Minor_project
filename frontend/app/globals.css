@@ -259,12 +259,12 @@ body {
     transform: translateY(0);
   }
   100% {
-    transform: translateY(calc(-100% - 14px));
+    transform: translateY(-50%);
   }
 }
 
 .animate-infinite-scroll-up {
-  animation: infinite-scroll-up 18s linear infinite;
+  animation: infinite-scroll-up 24s linear infinite;
   will-change: transform;
 }
 
@@ -272,6 +272,7 @@ body {
 .conveyor-container:hover .animate-infinite-scroll-up {
   animation-play-state: paused;
 }
+
 
 /* Custom scrollbars */
 pre::-webkit-scrollbar {

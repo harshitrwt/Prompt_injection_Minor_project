@@ -20,7 +20,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cordon — Prompt Injection Defense Middleware for Node.js & LLM Apps",
+  title: "Cordon - Prompt Injection Defense Middleware for Node.js & LLM Apps",
   description:
     "Production-grade npm middleware and API gateway screening every prompt for injections, jailbreaks, and extractions in under 20ms using ML, heuristics, and Qdrant Cloud vector similarity.",
   icons: {

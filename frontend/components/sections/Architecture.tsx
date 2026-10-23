@@ -39,11 +39,10 @@ export function Architecture() {
             </div>
 
             {/* Right Live Infinite Scrolling Integrations Showcase */}
-            <div className="conveyor-container relative flex h-[420px] w-full items-center justify-end overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,black_8%,black_92%,transparent_100%)]">
-              {/* Seamless Infinite Streaming Pill Column with Dual-Track Loop */}
-              <div className="relative z-10 flex w-full max-w-[340px] flex-col gap-3.5 overflow-hidden py-1">
-                {/* Track 1 */}
-                <div className="flex flex-col gap-3.5 shrink-0 animate-infinite-scroll-up">
+            <div className="conveyor-container relative flex h-[440px] w-full items-start justify-end overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,black_8%,black_92%,transparent_100%)]">
+              {/* Seamless Infinite Streaming Pill Column with Continuous Loop */}
+              <div className="relative z-10 w-full max-w-[340px] overflow-hidden py-1">
+                <div className="animate-infinite-scroll-up flex flex-col gap-3.5 pb-3.5">
                   {[
                     { name: "OWASP Top 10 (LLM01)", icon: "🛡", status: "SAFE", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-10" },
                     { name: "ChatGPT WebUI", icon: "☁", status: "18ms", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-3" },
@@ -52,31 +51,10 @@ export function Architecture() {
                     { name: "Local Ollama & Open-WebUI", icon: "⌬", status: "GUARDED", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-12" },
                     { name: "Qdrant Cloud Vectors", icon: "◈", status: "DENSE", statColor: "text-off-black bg-ash/50 border-ash", mr: "mr-2" },
                     { name: "LangChain Agents", icon: "⌗", status: "SHIELDED", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-8" },
-                  ].map((item, idx) => (
-                    <div
-                      key={`t1-${item.name}-${idx}`}
-                      className={`group flex items-center justify-between gap-3 rounded-full border border-ash/80 bg-white/95 px-4 py-2.5 font-mono text-off-black shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-md hover:border-off-black ${item.mr}`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-parchment text-[12px] shadow-inner">
-                          {item.icon}
-                        </span>
-                        <span className="text-[12.5px] font-medium tracking-tight text-off-black">
-                          {item.name}
-                        </span>
-                      </div>
-
-                      <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${item.statColor}`}>
-                        <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80 animate-pulse" />
-                        {item.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Track 2 (Clone for mathematically seamless infinite scroll) */}
-                <div className="flex flex-col gap-3.5 shrink-0 animate-infinite-scroll-up" aria-hidden="true">
-                  {[
+                    { name: "LlamaIndex RAG Pipeline", icon: "⚡", status: "SECURED", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-4" },
+                    { name: "Anthropic Claude 3.5", icon: "✦", status: "ARMORED", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-11" },
+                    { name: "DeepSeek V3 / R1", icon: "⌬", status: "PROTECTED", statColor: "text-off-black bg-ash/50 border-ash", mr: "mr-6" },
+                    // Repeated identical set to create the seamless infinite scroll
                     { name: "OWASP Top 10 (LLM01)", icon: "🛡", status: "SAFE", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-10" },
                     { name: "ChatGPT WebUI", icon: "☁", status: "18ms", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-3" },
                     { name: "Claude.ai Web", icon: "✳", status: "VERIFIED", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-14" },
@@ -84,9 +62,12 @@ export function Architecture() {
                     { name: "Local Ollama & Open-WebUI", icon: "⌬", status: "GUARDED", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-12" },
                     { name: "Qdrant Cloud Vectors", icon: "◈", status: "DENSE", statColor: "text-off-black bg-ash/50 border-ash", mr: "mr-2" },
                     { name: "LangChain Agents", icon: "⌗", status: "SHIELDED", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-8" },
+                    { name: "LlamaIndex RAG Pipeline", icon: "⚡", status: "SECURED", statColor: "text-lake-blue bg-blue-50 border-blue-200", mr: "mr-4" },
+                    { name: "Anthropic Claude 3.5", icon: "✦", status: "ARMORED", statColor: "text-emerald-700 bg-emerald-50 border-emerald-200", mr: "mr-11" },
+                    { name: "DeepSeek V3 / R1", icon: "⌬", status: "PROTECTED", statColor: "text-off-black bg-ash/50 border-ash", mr: "mr-6" },
                   ].map((item, idx) => (
                     <div
-                      key={`t2-${item.name}-${idx}`}
+                      key={`pill-${item.name}-${idx}`}
                       className={`group flex items-center justify-between gap-3 rounded-full border border-ash/80 bg-white/95 px-4 py-2.5 font-mono text-off-black shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] hover:shadow-md hover:border-off-black ${item.mr}`}
                     >
                       <div className="flex items-center gap-2.5">
@@ -107,6 +88,7 @@ export function Architecture() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
