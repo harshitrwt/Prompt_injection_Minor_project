@@ -1,3 +1,4 @@
+import hashlib
 import hmac
 import os
 import sys
@@ -42,6 +43,7 @@ class InspectRequest(BaseModel):
     prompt: str = Field(..., min_length=1, max_length=25000, description="The user prompt to inspect")
     tenant_id: Optional[str] = Field(None, description="Optional tenant or application identifier")
     sensitivity: Optional[str] = Field("balanced", description="Sensitivity policy: 'strict', 'balanced', or 'lenient'")
+    canary_token: Optional[str] = Field(None, description="Optional synthetic canary token to monitor leakage")
 
 
 class InspectResponse(BaseModel):
@@ -56,6 +58,12 @@ class InspectResponse(BaseModel):
     tier: str = "free"
     quota_remaining: Optional[int] = None
     quota_limit: Optional[int] = None
+    model_called: bool = True
+    prompt_hash: str
+    canary_detected: bool = False
+    package_version: str = "1.1.0"
+    model_version: str = "cordon-cloud-ensemble-v2.1"
+
 
 
 class ThreatUpsertRequest(BaseModel):
@@ -120,6 +128,7 @@ def inspect_prompt(
 ):
     tier, quota_limit, quota_remaining = get_tier_from_key(api_key)
     start_time = time.perf_counter()
+    prompt_hash = hashlib.sha256(payload.prompt.encode("utf-8")).hexdigest()
 
     res = pipeline.analyze_prompt(payload.prompt)
     elapsed_ms = (time.perf_counter() - start_time) * 1000.0
@@ -136,9 +145,24 @@ def inspect_prompt(
         decision = "SAFE"
         risk_level = "LOW"
 
+    canary_detected = False
+    if payload.canary_token and payload.canary_token in payload.prompt:
+        canary_detected = True
+        decision = "BLOCK"
+        risk_score = max(risk_score, 0.99)
+        risk_level = "HIGH"
+
+    model_called = decision != "BLOCK"
+
     response.headers["x-cordon-tier"] = tier
     response.headers["x-cordon-quota-limit"] = str(quota_limit)
     response.headers["x-cordon-quota-remaining"] = str(quota_remaining)
+
+    # Privacy-preserving audit log: log hash, length, latency, decision; NEVER raw prompt
+    print(
+        f"[AUDIT] hash={prompt_hash[:12]} len={len(payload.prompt)} decision={decision} "
+        f"model_called={model_called} latency={elapsed_ms:.2f}ms tier={tier}"
+    )
 
     return InspectResponse(
         id=f"insp_{uuid.uuid4().hex[:12]}",
@@ -152,7 +176,13 @@ def inspect_prompt(
         tier=tier,
         quota_remaining=quota_remaining,
         quota_limit=quota_limit,
+        model_called=model_called,
+        prompt_hash=prompt_hash,
+        canary_detected=canary_detected,
+        package_version="1.1.0",
+        model_version="cordon-cloud-ensemble-v2.1",
     )
+
 
 
 @app.post("/v1/threats/upsert")

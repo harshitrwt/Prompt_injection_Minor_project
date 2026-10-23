@@ -1,4 +1,14 @@
-import { CordonGuardOptions, InspectResult, TierType, SecurityDecision, RiskLevel } from "./types";
+import * as crypto from "crypto";
+import {
+  CordonGuardOptions,
+  InspectResult,
+  TierType,
+  SecurityDecision,
+  RiskLevel,
+  ReviewPolicy,
+  PrivacyOptions,
+  WrapModelResult,
+} from "./types";
 
 export class CordonGuard {
   private apiKey?: string;
@@ -6,14 +16,27 @@ export class CordonGuard {
   private timeoutMs: number;
   private failOpen: boolean;
   private mode: "auto" | "local" | "cloud";
+  private reviewPolicy: ReviewPolicy;
+  private canaryToken?: string;
+  private privacy: PrivacyOptions;
   private static loggedFreeNotice = false;
 
   constructor(options: CordonGuardOptions = {}) {
     this.apiKey = options.apiKey || process.env.CORDON_API_KEY;
-    this.baseUrl = (options.baseUrl || process.env.CORDON_GATEWAY_URL || "https://cordon-api-978214922885.asia-south1.run.app").replace(/\/+$/, "");
+    this.baseUrl = (
+      options.baseUrl ||
+      process.env.CORDON_GATEWAY_URL ||
+      "https://cordon-api-978214922885.asia-south1.run.app"
+    ).replace(/\/+$/, "");
     this.timeoutMs = options.timeoutMs || 800;
     this.failOpen = options.failOpen !== undefined ? options.failOpen : true;
     this.mode = options.mode || "auto";
+    this.reviewPolicy = options.reviewPolicy || "warn";
+    this.canaryToken = options.canaryToken;
+    this.privacy = {
+      hashOnly: options.privacy?.hashOnly !== undefined ? options.privacy.hashOnly : true,
+      maskPrompts: options.privacy?.maskPrompts ?? true,
+    };
 
     // Inform developer on first instantiation in Free Local Mode
     if (!this.apiKey && this.mode !== "cloud" && !CordonGuard.loggedFreeNotice) {
@@ -38,11 +61,58 @@ export class CordonGuard {
   }
 
   /**
+   * Calculates a SHA-256 hash for privacy-preserving zero-retention telemetry.
+   */
+  public hashPrompt(prompt: string): string {
+    return crypto.createHash("sha256").update(prompt, "utf8").digest("hex");
+  }
+
+  /**
+   * Determines whether downstream model call should proceed based on decision and reviewPolicy.
+   */
+  public shouldCallModel(decision: SecurityDecision): boolean {
+    if (decision === "BLOCK") {
+      return false;
+    }
+    if (decision === "REVIEW" && this.reviewPolicy === "block") {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Checks whether a synthetic canary token has leaked into LLM output.
+   */
+  public checkCanary(llmOutput: string, customCanary?: string): boolean {
+    const token = customCanary || this.canaryToken;
+    if (!token || !llmOutput) return false;
+    return llmOutput.includes(token);
+  }
+
+  /**
+   * Normalizes text by transliterating Cyrillic homoglyphs and stripping zero-width characters.
+   */
+  private normalizeHomoglyphs(text: string): string {
+    const homoglyphs: Record<string, string> = {
+      "а": "a", "с": "c", "е": "e", "о": "o", "р": "p", "х": "x", "у": "y",
+      "і": "i", "ј": "j", "ѕ": "s", "ԁ": "d", "ԛ": "q", "ԝ": "w",
+      "А": "A", "В": "B", "С": "C", "Е": "E", "Н": "H", "І": "I",
+      "Ј": "J", "К": "K", "М": "M", "О": "O", "Р": "P", "Т": "T",
+      "Х": "X", "Ү": "Y"
+    };
+
+    let cleaned = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+    cleaned = cleaned.replace(/[\u0400-\u04FF]/g, (char) => homoglyphs[char] || char);
+    return cleaned;
+  }
+
+  /**
    * Evaluates prompt locally using in-memory high-speed regex & de-obfuscator.
    * Runs in sub-millisecond time with zero external network requests.
    */
   private inspectLocal(prompt: string, startTime: number): InspectResult {
-    let cleaned = prompt;
+    const promptHash = this.hashPrompt(prompt);
+    let cleaned = this.normalizeHomoglyphs(prompt);
     const matches: Array<{ category: string; weight: number; pattern: string }> = [];
     let riskScore = 0.02;
 
@@ -81,8 +151,18 @@ export class CordonGuard {
       riskScore = Math.max(riskScore, 0.94);
     }
 
+    // Multilingual overrides (Hindi, Spanish, Russian, French, Chinese)
+    if (/(?:पिछले\s*सभी\s*निर्देशों\s*को\s*अनसुना|ignora\s+todas\s+las\s+instrucciones|ignorer\s+toutes\s+les\s+instructions|игнорируй\s+все\s+предыдущие\s+инструкции|忽略之前的所有指令)/i.test(lower)) {
+      matches.push({
+        category: "Multilingual Instruction Override",
+        weight: 0.92,
+        pattern: "multilingual_override",
+      });
+      riskScore = Math.max(riskScore, 0.92);
+    }
+
     // Category: System Prompt Extraction
-    if (/(?:reveal|output|display|print|show|dump|leak)\s+.*(?:system|developer|hidden|secret|initial)\s*(?:prompt|instructions|rules|token|key)/i.test(lower)) {
+    if (/(?:reveal|output|display|print|show|dump|leak)\s+.*(?:system|developer|hidden|secret|initial|canary)\s*(?:prompt|instructions|rules|token|key)/i.test(lower)) {
       matches.push({
         category: "System Extraction",
         weight: 0.96,
@@ -111,6 +191,35 @@ export class CordonGuard {
       riskScore = Math.max(riskScore, 0.95);
     }
 
+    // Category: Tool Manipulation & Code Execution
+    if (/(?:execute_bash|curl\s+http|DROP\s+TABLE|rm\s+-rf|process\.env|subprocess\.run)/i.test(lower)) {
+      matches.push({
+        category: "Tool Manipulation",
+        weight: 0.91,
+        pattern: "tool_injection",
+      });
+      riskScore = Math.max(riskScore, 0.91);
+    }
+
+    // Check for canary token presence in input prompt
+    let canaryDetected = false;
+    if (this.canaryToken && prompt.includes(this.canaryToken)) {
+      canaryDetected = true;
+      riskScore = Math.max(riskScore, 0.99);
+      matches.push({
+        category: "Canary Exfiltration Probe",
+        weight: 0.99,
+        pattern: "canary_token_present",
+      });
+    }
+
+    // Hard-negative discount: safe coding / educational inquiries
+    if (/(?:in python|in oop|in c\+\+|in typescript|how do i override a method|re\.ignorecase|artery bypass|canary deployment)/i.test(lower)) {
+      if (!/(?:print|reveal|leak|output)\s+(?:system|secret|token)/i.test(lower)) {
+        riskScore = Math.min(riskScore, 0.18);
+      }
+    }
+
     // Decision calibration
     let decision: SecurityDecision = "SAFE";
     let riskLevel: RiskLevel = "LOW";
@@ -124,6 +233,7 @@ export class CordonGuard {
     }
 
     const elapsed = Date.now() - startTime;
+    const modelCalled = this.shouldCallModel(decision);
 
     return {
       id: `insp_local_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
@@ -131,9 +241,14 @@ export class CordonGuard {
       risk_score: riskScore,
       risk_level: riskLevel,
       latency_ms: Math.max(1, elapsed),
-      input_prompt: prompt,
+      input_prompt: this.privacy.hashOnly ? `[HASH:${promptHash.substring(0, 8)}]` : prompt,
       cleaned_prompt: cleaned !== prompt ? cleaned : undefined,
       tier: "free-local",
+      model_called: modelCalled,
+      prompt_hash: promptHash,
+      canary_detected: canaryDetected,
+      package_version: "1.1.0",
+      model_version: "cordon-heuristic-v1.1",
       detectors: {
         heuristic_engine: {
           score: riskScore,
@@ -151,6 +266,7 @@ export class CordonGuard {
    */
   async inspect(prompt: string): Promise<InspectResult> {
     const startTime = Date.now();
+    const promptHash = this.hashPrompt(prompt || "");
 
     // Guard against empty / non-string prompts
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
@@ -160,8 +276,11 @@ export class CordonGuard {
         risk_score: 0.0,
         risk_level: "LOW",
         latency_ms: 0,
-        input_prompt: prompt || "",
+        input_prompt: "",
         tier: this.getTier(),
+        model_called: true,
+        prompt_hash: promptHash,
+        package_version: "1.1.0",
       };
     }
 
@@ -209,27 +328,35 @@ export class CordonGuard {
       const data = await response.json();
       const elapsed = Date.now() - startTime;
 
+      const decision: SecurityDecision = data.decision || data.fusion_output?.decision || "SAFE";
+      const modelCalled = this.shouldCallModel(decision);
+
       // Extract tier and quota headers
       const quotaHeader = response.headers.get("x-cordon-quota-remaining");
       const quotaLimitHeader = response.headers.get("x-cordon-quota-limit");
 
       return {
         id: data.id || `insp_${Date.now()}`,
-        decision: data.decision || data.fusion_output?.decision || "SAFE",
+        decision,
         risk_score: data.risk_score !== undefined ? data.risk_score : (data.fusion_output?.risk_score ?? 0.0),
         risk_level: data.risk_level || data.fusion_output?.risk_level || "LOW",
         latency_ms: data.latency_ms || elapsed,
-        input_prompt: prompt,
+        input_prompt: this.privacy.hashOnly ? `[HASH:${promptHash.substring(0, 8)}]` : prompt,
         cleaned_prompt: data.cleaned_prompt,
         detectors: data.detectors,
         tier: activeTier,
         quota_remaining: quotaHeader ? parseInt(quotaHeader, 10) : (activeTier === "pro" ? 95790 : 4210),
         quota_limit: quotaLimitHeader ? parseInt(quotaLimitHeader, 10) : (activeTier === "pro" ? 100000 : 5000),
+        model_called: modelCalled,
+        prompt_hash: promptHash,
+        canary_detected: Boolean(this.canaryToken && prompt.includes(this.canaryToken)),
+        package_version: "1.1.0",
+        model_version: "cordon-cloud-ensemble-v2.1",
       };
     } catch (err: any) {
       clearTimeout(timeoutTimer);
 
-      // On network failure or timeout: fall back gracefully
+      // On network failure or timeout: fall back gracefully if failOpen is true
       if (this.failOpen) {
         console.warn(`[CordonGuard Warning] Cloud gateway unavailable (${err.message}). Falling back to Free Local Heuristics.`);
         const fallback = this.inspectLocal(prompt, startTime);
@@ -245,12 +372,48 @@ export class CordonGuard {
         risk_score: 1.0,
         risk_level: "HIGH",
         latency_ms: Date.now() - startTime,
-        input_prompt: prompt,
+        input_prompt: this.privacy.hashOnly ? `[HASH:${promptHash.substring(0, 8)}]` : prompt,
         tier: activeTier,
+        model_called: false,
+        prompt_hash: promptHash,
+        package_version: "1.1.0",
       };
     }
+  }
+
+  /**
+   * Safe wrapper around downstream LLM calls (e.g. OpenAI, Anthropic, Gemini).
+   * Automatically inspects prompt first. If safe, invokes the model; otherwise suppresses the call.
+   * If a canary token is configured, verifies that the model response did not leak the canary.
+   */
+  async wrapModel<T>(
+    prompt: string,
+    modelFn: (prompt: string) => Promise<T>
+  ): Promise<WrapModelResult<T>> {
+    const inspection = await this.inspect(prompt);
+
+    if (!inspection.model_called) {
+      return {
+        inspection,
+        blocked: true,
+        canaryLeaked: false,
+      };
+    }
+
+    const modelResponse = await modelFn(prompt);
+    const canaryLeaked = this.checkCanary(
+      typeof modelResponse === "string" ? modelResponse : JSON.stringify(modelResponse)
+    );
+
+    return {
+      inspection,
+      result: modelResponse,
+      blocked: false,
+      canaryLeaked,
+    };
   }
 }
 
 // Convenient alias
 export const PromptGuard = CordonGuard;
+

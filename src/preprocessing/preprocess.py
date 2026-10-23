@@ -14,13 +14,22 @@ def calculate_shannon_entropy(text: str) -> float:
     entropy = - sum([p * math.log(p, 2) for p in prob])
     return float(entropy)
 
+import urllib.parse
+
+HOMOGLYPHS = {
+    'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c', 'у': 'y', 'х': 'x',
+    'і': 'i', 'ј': 'j', 'ѕ': 's', 'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K',
+    'М': 'M', 'Н': 'H', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X'
+}
+
 def decode_and_normalize(text: str) -> str:
     """
     Advanced input preprocessor:
     1. Normalizes Unicode homoglyphs and removes zero-width characters.
-    2. Auto-detects and decodes embedded Base64 strings.
-    3. Auto-detects Hex-encoded text.
-    4. Combines raw and decoded representations so downstream detectors see hidden payloads.
+    2. URL-unquotes percentage-encoded characters (%49%67%6e...).
+    3. Auto-detects and decodes embedded Base64 strings.
+    4. Auto-detects Hex-encoded text.
+    5. Combines raw and decoded representations so downstream detectors see hidden payloads.
     """
     if not isinstance(text, str) or not text.strip():
         return ""
@@ -29,7 +38,18 @@ def decode_and_normalize(text: str) -> str:
     normalized = unicodedata.normalize('NFKC', text)
     normalized = re.sub(r'[\u200b-\u200d\ufeff]', '', normalized)
     
-    decoded_parts = [normalized]
+    # 2. Homoglyph transliteration (e.g. Cyrillic lookalikes to ASCII)
+    homoglyph_clean = "".join(HOMOGLYPHS.get(c, c) for c in normalized)
+    
+    # 3. URL Unquoting
+    try:
+        url_unquoted = urllib.parse.unquote(homoglyph_clean)
+    except Exception:
+        url_unquoted = homoglyph_clean
+
+    decoded_parts = [url_unquoted]
+    if url_unquoted != normalized:
+        decoded_parts.append(normalized)
     
     # 2. Base64 Auto-Decoding Detection
     # Look for base64-like substrings of length >= 12

@@ -34,10 +34,27 @@ class HeuristicDetector:
             
             # Indirect Injections Markers
             (r"\[system\s+note\s*:", 0.80, "indirect_injection"),
-            (r"<!--\s*ai\s+instruction", 0.80, "indirect_injection"),
+            (r"<!--\s*(ai\s+instruction|system\s+directive|instruction)", 0.85, "indirect_injection"),
             (r"\[admin\s+command\s*:", 0.85, "indirect_injection"),
+            (r"\[system\s+override", 0.85, "indirect_injection"),
             (r"note\s+to\s+llm\s*:", 0.75, "indirect_injection"),
             
+            # Tool Manipulation & Remote Code/SQL Execution
+            (r"(\"tool_call\"|\"parameters\"|execute_bash|cat\s+/etc/passwd|DROP\s+TABLE|admin_dispatch|bypass_auth)", 0.90, "tool_manipulation"),
+            (r"(sql_query\s+tool|use\s+the\s+sql_query)", 0.85, "tool_manipulation"),
+
+            # Multilingual Adversarial Directives
+            # Hindi
+            (r"(पिछला\s+सारा\s+निर्देश|सिस्टम\s+का\s+गोपनीय|प्रॉम्प्ट\s+बताओ)", 0.85, "multilingual_override"),
+            # Russian
+            (r"(игнорируй\s+все\s+предыдущие|системный\s+промпт|выведи\s+.*промпт)", 0.85, "multilingual_override"),
+            # Spanish
+            (r"(ignora\s+todas\s+las\s+instrucciones|prompt\s+del\s+sistema)", 0.85, "multilingual_override"),
+            # French
+            (r"(ignorez\s+toutes\s+les\s+directives|instructions\s+système)", 0.85, "multilingual_override"),
+            # Chinese
+            (r"(忽略之前的全部系统指令|系统设定|机密提示词)", 0.85, "multilingual_override"),
+
             # Obfuscation & Symbol Tricks
             (r"decode\s+base64", 0.60, "obfuscation"),
             (r"rot13", 0.60, "obfuscation"),

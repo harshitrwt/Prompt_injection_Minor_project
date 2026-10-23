@@ -4,6 +4,8 @@ export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 
 export type TierType = "free-local" | "free-cloud" | "pro";
 
+export type ReviewPolicy = "block" | "warn" | "allow";
+
 export interface DetectorSignals {
   ml_classifier?: {
     probability: number;
@@ -42,6 +44,45 @@ export interface InspectResult {
   quota_remaining?: number;
   /** Monthly quota limit for current tier */
   quota_limit?: number;
+
+  /**
+   * Whether downstream LLM execution is safe to call.
+   * false if decision is BLOCK, or if decision is REVIEW and reviewPolicy === 'block'.
+   */
+  model_called: boolean;
+
+  /**
+   * SHA-256 cryptographic hash of the input prompt for zero-PII audit logging.
+   */
+  prompt_hash?: string;
+
+  /**
+   * Flag indicating if a canary token was detected in the prompt or in downstream model output.
+   */
+  canary_detected?: boolean;
+
+  /**
+   * SDK Package version (e.g. "1.1.0").
+   */
+  package_version?: string;
+
+  /**
+   * Gateway defense model version.
+   */
+  model_version?: string;
+}
+
+export interface PrivacyOptions {
+  /**
+   * If true, never print or log raw prompt text to consoles or telemetry (only SHA-256 hashes).
+   * Default: true in production.
+   */
+  hashOnly?: boolean;
+
+  /**
+   * If true, mask sensitive prompt substrings when logging.
+   */
+  maskPrompts?: boolean;
 }
 
 export interface CordonGuardOptions {
@@ -71,6 +112,35 @@ export interface CordonGuardOptions {
    * - 'cloud': forces cloud gateway inspection across ML + Qdrant vectors.
    */
   mode?: "auto" | "local" | "cloud";
+
+  /**
+   * Policy for handling prompts marked as "REVIEW":
+   * - 'warn': logs a warning but sets model_called = true (default).
+   * - 'block': sets model_called = false and treats REVIEW as a security block.
+   * - 'allow': allows model execution silently.
+   */
+  reviewPolicy?: ReviewPolicy;
+
+  /**
+   * Synthetic canary secret token used in isolated system prompts to monitor actual model leakage.
+   */
+  canaryToken?: string;
+
+  /**
+   * Privacy and zero-retention logging options.
+   */
+  privacy?: PrivacyOptions;
+}
+
+export interface WrapModelResult<T> {
+  /** Result of security evaluation */
+  inspection: InspectResult;
+  /** Output from downstream LLM (undefined if blocked) */
+  result?: T;
+  /** Whether prompt was blocked from reaching the model */
+  blocked: boolean;
+  /** Whether the canary token was leaked in downstream model response */
+  canaryLeaked: boolean;
 }
 
 export interface MiddlewareOptions extends CordonGuardOptions {
@@ -81,3 +151,4 @@ export interface MiddlewareOptions extends CordonGuardOptions {
   /** Custom handler when a prompt is classified as REVIEW */
   onReview?: (req: any, res: any, inspection: InspectResult) => void;
 }
+

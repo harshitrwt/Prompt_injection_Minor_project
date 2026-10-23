@@ -1,6 +1,6 @@
 {
   "name": "cordonguard",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Production-grade Prompt Injection & LLM Security Firewall Middleware for Node.js, Express, Next.js, and OpenAI",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
